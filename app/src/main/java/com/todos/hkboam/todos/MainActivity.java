@@ -15,6 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.todos.hkboam.todos.bdd.dao.MemoDAO;
+import com.todos.hkboam.todos.bdd.dao.UserDAO;
+import com.todos.hkboam.todos.bdd.modal.Memo;
+import com.todos.hkboam.todos.bdd.modal.User;
 
 import java.util.ArrayList;
 
@@ -46,10 +52,24 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        init();
+        UserDAO userd = new UserDAO(this);
+        userd.open();
+        User u = new User(1, "toto.upmc", "toto@hotmail.fr", "toutou");
+        userd.ajouter(u);
+        u = userd.selectionner(1);
+        userd.close();
+
+        MemoDAO memod = new MemoDAO(this);
+        memod.open();
+        Memo m = new Memo(1, "Nouveau memo");
+        memod.ajouter(m);
+        m = memod.selectionner(1);
+        memod.close();
+
+        init(u, m);
     }
 
-    private void init() {
+    private void init(User u, Memo m) {
         ArrayList<String> al = new ArrayList<String>();
         al.add("Salut");
         al.add("Bonjour");
@@ -63,6 +83,10 @@ public class MainActivity extends AppCompatActivity
         al.add("Salut");
         al.add("Bonjour");
         al.add("ABABABABABA");
+        al.add(u.getUsername());
+        al.add(u.getMail());
+        al.add(u.getPassword());
+        al.add(m.getContent());
         ListView listView = (ListView) findViewById(R.id.listView);
         MyAdapter mA = new MyAdapter(this, al);
         listView.setAdapter(mA);
