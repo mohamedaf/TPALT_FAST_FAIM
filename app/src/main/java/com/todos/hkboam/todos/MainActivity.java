@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -52,11 +53,21 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Tests sur la base de donnée
+
         UserDAO userd = new UserDAO(this);
         userd.open();
         User u = new User(1, "toto.upmc", "toto@hotmail.fr", "toutou");
         userd.ajouter(u);
         u = userd.selectionner(1);
+
+        if(userd.selectionner(2) != null){
+            Log.d("deb", "user 2");
+            u = userd.selectionner(2);
+        }
+        else
+            Log.d("deb", "user 1");
+
         userd.close();
 
         MemoDAO memod = new MemoDAO(this);
@@ -133,14 +144,18 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
+        if (id == R.id.nav_login) {
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            return true;
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
+            return true;
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
