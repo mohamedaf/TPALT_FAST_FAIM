@@ -15,7 +15,7 @@ public class User {
         this.id = id;
         this.username = username;
         this.mail = mail;
-        this.password = Util.MD5(password);
+        this.password = password;
     }
 
     public long getId() {
@@ -43,7 +43,7 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return Util.MD5(password);
     }
 
     public void setPassword(String password) {

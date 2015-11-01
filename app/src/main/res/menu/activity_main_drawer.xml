@@ -5,19 +5,15 @@
         <item
             android:id="@+id/nav_login"
             android:icon="@android:drawable/ic_lock_idle_lock"
-            android:title="login / Register"/>
+            android:title="@string/login_register" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Gallery"/>
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow"/>
+            android:id="@+id/nav_synchronize"
+            android:icon="@android:drawable/ic_menu_rotate"
+            android:title="@string/synchronize" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@android:drawable/ic_menu_manage"
-            android:title="Tools"/>
+            android:title="@string/parameters" />
     </group>
 
     <item android:title="Communicate">
@@ -25,11 +21,11 @@
             <item
                 android:id="@+id/nav_share"
                 android:icon="@android:drawable/ic_menu_share"
-                android:title="Share"/>
+                android:title="@string/share" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@android:drawable/ic_menu_send"
-                android:title="Send"/>
+                android:title="@string/send" />
         </menu>
     </item>
 

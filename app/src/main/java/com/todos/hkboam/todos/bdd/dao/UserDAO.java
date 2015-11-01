@@ -33,7 +33,7 @@ public class UserDAO extends DAOBase {
     }
 
     /**
-     * @param id l'identifiant de l'utilisateur à supprimer
+     * @param id l'identifiant du métier à supprimer
      */
     public void supprimer(long id) {
         mDb.delete(TABLE_NAME, KEY + " = ?", new String[]{String.valueOf(id)});
@@ -51,29 +51,27 @@ public class UserDAO extends DAOBase {
     }
 
     /**
-     * @param id l'identifiant de l'utilisateur à récupérer
+     * @param id l'identifiant du métier à récupérer
      */
     public User selectionner(long id) {
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where id=?", new String[]{String.valueOf(id)});
-        if(c.moveToNext()){
+        if (c.moveToNext()) {
             User u = new User(c.getLong(0), c.getString(1), c.getString(2), c.getString(3));
             c.close();
             return u;
-        }
-        else return null;
+        } else return null;
     }
 
     /**
      * @param mail l'email de l'utilisateur à récupérer
-     * @param mdp le mot de passe de l'utilisateur à récupérer
+     * @param mdp  le mot de passe de l'utilisateur à récupérer
      */
     public User selectionner(String mail, String mdp) {
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where mail=? and password=?", new String[]{mail, mdp});
-        if(c.moveToNext()){
+        if (c.moveToNext()) {
             User u = new User(c.getLong(0), c.getString(1), c.getString(2), c.getString(3));
             c.close();
             return u;
-        }
-        else return null;
+        } else return null;
     }
 }

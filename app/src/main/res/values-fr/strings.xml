@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Todos</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Paramètres</string>
+    <string name="title_activity_login">Se connecter</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Mot de passe (optionnel)</string>
+    <string name="action_sign_in">Se connecter ou s\'inscrire</string>
+    <string name="action_sign_in_short">Se connecter</string>
+    <string name="error_incorrect_password">Ce mot de passe est incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_settings">Paramètres</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">Général</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Toujours</item>
+        <item>Quand c\'est possible</item>
+        <item>Jamais</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 heure</item>
+        <item>3 heures</item>
+        <item>6 heures</item>
+        <item>Jamais</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Sonnerie</string>
+    <string name="pref_ringtone_silent">Silence</string>
+
+    <string name="pref_title_vibrate">Vibreur</string>
+
+    <string name="title_memo_edit_activity">Editer</string>
+    <string name="title_memo_view_activity">Voir</string>
+
+    <string name="memo_empty">Impossible de sauvegarder un mémo vide ...</string>
+    <string name="memo_save">Sauvegarde du mémo ...</string>
+
+    <!-- Strings related to login -->
+    <string name="full_name">Nom</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register New Account</string>
+    <string name="link_to_register">New to our app ? Register here</string>
+    <string name="link_to_login">Already has account! Login here</string>
+    <string name="error_invalid_email">Adresse mail invalide !</string>
+    <string name="error_fullName">Le nom donné est invalide !</string>
+    <string name="error_invalid_password">Le mot de passe doit contenir au moins 6 caractères !</string>
+    <string name="error_login">Identifiant ou mot de passe saisi incorrect !</string>
+    <string name="error_fields">Un ou plusieurs champs sont manquants ou incorrects !</string>
+
+    <string name="title_activity_register">S\'enregistrer</string>
+
+    <string name="login_register">Connexion / Inscription</string>
+    <string name="synchronize">Synchroniser</string>
+    <string name="parameters">Paramètres</string>
+    <string name="share">Partager</string>
+    <string name="send">Envoyer</string>
+    <string name="not_connected">Non connecté</string>
+    <string name="user">Utilisateur : </string>
+
+    <string name="selected_items">mémos sélectionnés</string>
+    <string name="selected_item">mémo sélectionné</string>
+</resources>

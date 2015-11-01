@@ -23,6 +23,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public static final String MEMO_KEY = "id";
     public static final String MEMO_CONTENT = "content";
+    public static final String MEMO_MODIFICATION_DATE = "modification_date";
+    public static final String MEMO_AUTHOR = "author";
     public static final String MEMO_TABLE_NAME = "memo";
 
     /**
@@ -50,7 +52,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String MEMO_TABLE_CREATE =
             "CREATE TABLE " + MEMO_TABLE_NAME + " (" +
                     MEMO_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    MEMO_CONTENT + " TEXT NOT NULL);";
+                    MEMO_CONTENT + " TEXT NOT NULL, " +
+                    MEMO_MODIFICATION_DATE + " INTEGER NOT NULL, " +
+                    MEMO_AUTHOR + " INTEGER NOT NULL, " +
+                    "FOREIGN KEY (" + MEMO_AUTHOR + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "));";
     public static final String MEMO_TABLE_DROP = "DROP TABLE IF EXISTS " + MEMO_TABLE_NAME + ";";
 
     /**
@@ -61,8 +66,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     USER_MEMO_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     USER_MEMO_USER + " INTEGER NOT NULL, " +
                     USER_MEMO_MEMO + " INTEGER NOT NULL, " +
-                    "FOREIGN KEY (" + USER_MEMO_USER + ") REFERENCES "+ USER_TABLE_NAME +"("+ USER_KEY +"), " +
-                    "FOREIGN KEY (" + USER_MEMO_MEMO + ") REFERENCES "+ MEMO_TABLE_NAME +"("+ MEMO_KEY +"));";
+                    "FOREIGN KEY (" + USER_MEMO_USER + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "), " +
+                    "FOREIGN KEY (" + USER_MEMO_MEMO + ") REFERENCES " + MEMO_TABLE_NAME + "(" + MEMO_KEY + "));";
     public static final String USER_MEMO_TABLE_DROP = "DROP TABLE IF EXISTS " + USER_MEMO_TABLE_NAME + ";";
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
