@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by mohamedamin on 18/10/2015.
  */
-public class List implements Serializable {
+public class TodoList implements Serializable {
     private long id;
     private long modification_date;
     private long author;
@@ -23,11 +23,11 @@ public class List implements Serializable {
 
     }*/
 
-    public List(String title){
+    public TodoList(String title){
         this.title = title;
     }
 
-    public List(long id, String title) {
+    public TodoList(long id, String title) {
         this.id = id;
         this.title = title;
     }

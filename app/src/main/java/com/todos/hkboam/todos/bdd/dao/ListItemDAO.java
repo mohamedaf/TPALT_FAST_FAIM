@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.todos.hkboam.todos.bdd.DatabaseHandler;
-import com.todos.hkboam.todos.bdd.modal.ListItem;
+import com.todos.hkboam.todos.bdd.modal.Todo;
 
 import java.util.ArrayList;
 
@@ -13,12 +13,12 @@ import java.util.ArrayList;
  * Created by zomboris on 11/3/15.
  */
 public class ListItemDAO extends  DAOBase {
-    public static final String KEY = DatabaseHandler.LIST_ITEM_KEY;
-    public static final String MODIFICATION_DATE = DatabaseHandler.LIST_ITEM_MODIFICATION_DATE;
-    public static final String LIST = DatabaseHandler.LIST_ITEM_LIST;
-    public static final String AUTHOR = DatabaseHandler.LIST_ITEM_AUTHOR;
-    public static final String CONTENT = DatabaseHandler.LIST_ITEM_CONTENT;
-    public static final String TABLE_NAME = DatabaseHandler.LIST_ITEM_TABLE_NAME;
+    public static final String KEY = DatabaseHandler.TODO_KEY;
+    public static final String MODIFICATION_DATE = DatabaseHandler.TODO_MODIFICATION_DATE;
+    public static final String LIST = DatabaseHandler.TODO_LIST;
+    public static final String AUTHOR = DatabaseHandler.TODO_AUTHOR;
+    public static final String CONTENT = DatabaseHandler.TODO_CONTENT;
+    public static final String TABLE_NAME = DatabaseHandler.TODO_TABLE_NAME;
 
 
 
@@ -29,7 +29,7 @@ public class ListItemDAO extends  DAOBase {
     /**
      * @param l la liste à ajouter à la base
      */
-    public void ajouter(ListItem li) {
+    public void ajouter(Todo li) {
         ContentValues value = new ContentValues();
         value.put(MODIFICATION_DATE, li.getModification_date());
         value.put(LIST, li.getList());
@@ -48,7 +48,7 @@ public class ListItemDAO extends  DAOBase {
     /**
      * @param l la liste modifié
      */
-    public void modifier(ListItem l) {
+    public void modifier(Todo l) {
         ContentValues value = new ContentValues();
         value.put(MODIFICATION_DATE, l.getModification_date());
         value.put(CONTENT, l.getContent());
@@ -58,7 +58,7 @@ public class ListItemDAO extends  DAOBase {
     /**
      * @param id l'identifiant du métier à récupérer
      */
-    public ListItem selectionner(long id) {
+    public Todo selectionner(long id) {
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where id=?", new String[]{String.valueOf(id)});
         int colKey = c.getColumnIndex(KEY);
         int colModDate = c.getColumnIndex(MODIFICATION_DATE);
@@ -66,7 +66,7 @@ public class ListItemDAO extends  DAOBase {
         int colAuthor = c.getColumnIndex(AUTHOR);
         int colContent = c.getColumnIndex(CONTENT);
         if (c.moveToNext()) {
-            ListItem m = new ListItem(c.getLong(colKey), c.getString(colContent));
+            Todo m = new Todo(c.getLong(colKey), c.getString(colContent));
             m.setModification_date(c.getLong(colModDate));
             m.setList(c.getLong(colList));
             m.setAuthor(c.getLong(colAuthor));
@@ -75,8 +75,8 @@ public class ListItemDAO extends  DAOBase {
         } else return null;
     }
 
-    public ArrayList<ListItem> toutSelectionner() {
-        ArrayList<ListItem> res = new ArrayList<ListItem>();
+    public ArrayList<Todo> toutSelectionner() {
+        ArrayList<Todo> res = new ArrayList<Todo>();
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME, new String[0]);
         int colKey = c.getColumnIndex(KEY);
         int colModDate = c.getColumnIndex(MODIFICATION_DATE);
@@ -84,7 +84,7 @@ public class ListItemDAO extends  DAOBase {
         int colAuthor = c.getColumnIndex(AUTHOR);
         int colContent = c.getColumnIndex(CONTENT);
         while (c.moveToNext()) {
-            ListItem m = new ListItem(c.getLong(colKey), c.getString(colContent));
+            Todo m = new Todo(c.getLong(colKey), c.getString(colContent));
             m.setModification_date(c.getLong(colModDate));
             m.setList(c.getLong(colList));
             m.setAuthor(c.getLong(colAuthor));

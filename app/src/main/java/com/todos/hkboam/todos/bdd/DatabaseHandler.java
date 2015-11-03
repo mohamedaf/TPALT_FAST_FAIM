@@ -19,32 +19,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     /**
-     * LIST
+     * TODOLIST
      */
-    public static final String LIST_KEY = "id";
-    public static final String LIST_MODIFICATION_DATE = "modification_date";
-    public static final String LIST_AUTHOR = "author";
-    public static final String LIST_TITLE = "title";
-    public static final String LIST_TABLE_NAME = "list";
+    public static final String TODOLIST_KEY = "id";
+    public static final String TODOLIST_MODIFICATION_DATE = "modification_date";
+    public static final String TODOLIST_AUTHOR = "author";
+    public static final String TODOLIST_TITLE = "title";
+    public static final String TODOLIST_TABLE_NAME = "todoList";
 
     /**
-     * USER_LIST
+     * USER_TODOLIST
      */
-    public static final String USER_LIST_KEY = "id";
-    public static final String USER_LIST_USER = "user";
-    public static final String USER_LIST_LIST = "list";
-    public static final String USER_LIST_RIGHTS = "rights";
-    public static final String USER_LIST_TABLE_NAME = "userList";
+    public static final String USER_TODOLIST_KEY = "id";
+    public static final String USER_TODOLIST_USER = "user";
+    public static final String USER_TODOLIST_LIST = "todoList";
+    public static final String USER_TODOLIST_RIGHTS = "rights";
+    public static final String USER_TODOLIST_TABLE_NAME = "userTodoList";
 
     /**
-     * LIST_ITEM
+     * TODO
      */
-    public static final String LIST_ITEM_KEY = "id";
-    public static final String LIST_ITEM_MODIFICATION_DATE = "modification_date";
-    public static final String LIST_ITEM_LIST = "list";
-    public static final String LIST_ITEM_AUTHOR = "author";
-    public static final String LIST_ITEM_CONTENT = "content";
-    public static final String LIST_ITEM_TABLE_NAME = "listItem";
+    public static final String TODO_KEY = "id";
+    public static final String TODO_MODIFICATION_DATE = "modification_date";
+    public static final String TODO_LIST = "todoList";
+    public static final String TODO_AUTHOR = "author";
+    public static final String TODO_CONTENT = "content";
+    public static final String TODO_TABLE_NAME = "todo";
 
     /**
      * USER
@@ -60,37 +60,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * MEMO
      */
-    public static final String LIST_TABLE_CREATE =
-            "CREATE TABLE " + LIST_TABLE_NAME + " (" +
-                    LIST_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    LIST_MODIFICATION_DATE + " INTEGER NOT NULL, " +
-                    LIST_AUTHOR + " INTEGER NOT NULL, " +
-                    LIST_TITLE + " TEXT NOT NULL, " +
-                    "FOREIGN KEY (" + LIST_AUTHOR + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "));";
-    public static final String MEMO_TABLE_DROP = "DROP TABLE IF EXISTS " + LIST_TABLE_NAME + ";";
+    public static final String TODOLIST_TABLE_CREATE =
+            "CREATE TABLE " + TODOLIST_TABLE_NAME + " (" +
+                    TODOLIST_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    TODOLIST_MODIFICATION_DATE + " INTEGER NOT NULL, " +
+                    TODOLIST_AUTHOR + " INTEGER NOT NULL, " +
+                    TODOLIST_TITLE + " TEXT NOT NULL, " +
+                    "FOREIGN KEY (" + TODOLIST_AUTHOR + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "));";
+    public static final String TODOLIST_TABLE_DROP = "DROP TABLE IF EXISTS " + TODOLIST_TABLE_NAME + ";";
 
     /**
      * USER_MEMO
      */
-    public static final String USER_LIST_TABLE_CREATE =
-            "CREATE TABLE " + USER_LIST_TABLE_NAME + " (" +
-                    USER_LIST_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    USER_LIST_USER + " INTEGER NOT NULL, " +
-                    USER_LIST_LIST + " INTEGER NOT NULL, " +
-                    USER_LIST_RIGHTS + " INTEGER NOT NULL, " +
-                    "FOREIGN KEY (" + USER_LIST_USER + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "), " +
-                    "FOREIGN KEY (" + USER_LIST_LIST + ") REFERENCES " + LIST_TABLE_NAME + "(" + LIST_KEY + "));";
-    public static final String USER_MEMO_TABLE_DROP = "DROP TABLE IF EXISTS " + USER_LIST_TABLE_NAME + ";";
+    public static final String USER_TODOLIST_TABLE_CREATE =
+            "CREATE TABLE " + USER_TODOLIST_TABLE_NAME + " (" +
+                    USER_TODOLIST_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    USER_TODOLIST_USER + " INTEGER NOT NULL, " +
+                    USER_TODOLIST_LIST + " INTEGER NOT NULL, " +
+                    USER_TODOLIST_RIGHTS + " INTEGER NOT NULL, " +
+                    "FOREIGN KEY (" + USER_TODOLIST_USER + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "), " +
+                    "FOREIGN KEY (" + USER_TODOLIST_LIST + ") REFERENCES " + TODOLIST_TABLE_NAME + "(" + TODOLIST_KEY + "));";
+    public static final String USER_TODOLIST_TABLE_DROP = "DROP TABLE IF EXISTS " + USER_TODOLIST_TABLE_NAME + ";";
 
-    public static final String LIST_ITEM_TABLE_CREATE =
-            "CREATE TABLE " + LIST_ITEM_TABLE_NAME + " (" +
-                    LIST_ITEM_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    LIST_ITEM_MODIFICATION_DATE + " INTEGER NOT NULL, " +
-                    LIST_ITEM_LIST + " INTEGER NOT NULL, " +
-                    LIST_ITEM_AUTHOR + " INTEGER NOT NULL, " +
-                    LIST_ITEM_CONTENT + " TEXT NOT NULL, " +
-                    "FOREIGN KEY (" + LIST_ITEM_AUTHOR + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "), " +
-                    "FOREIGN KEY (" + LIST_ITEM_LIST + ") REFERENCES " + LIST_TABLE_NAME + "(" + LIST_KEY + "));";
+    public static final String TODO_TABLE_CREATE =
+            "CREATE TABLE " + TODO_TABLE_NAME + " (" +
+                    TODO_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    TODO_MODIFICATION_DATE + " INTEGER NOT NULL, " +
+                    TODO_LIST + " INTEGER NOT NULL, " +
+                    TODO_AUTHOR + " INTEGER NOT NULL, " +
+                    TODO_CONTENT + " TEXT NOT NULL, " +
+                    "FOREIGN KEY (" + TODO_AUTHOR + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "), " +
+                    "FOREIGN KEY (" + TODO_LIST + ") REFERENCES " + TODOLIST_TABLE_NAME + "(" + TODOLIST_KEY + "));";
+    public static final String TODO_TABLE_DROP = "DROP TABLE IF EXISTS " + TODO_TABLE_NAME + ";";
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -102,9 +103,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
          * Creation de la table des utilisateurs de l'application
          */
         db.execSQL(USER_TABLE_CREATE);
-        db.execSQL(LIST_TABLE_CREATE);
-        db.execSQL(USER_LIST_TABLE_CREATE);
-        db.execSQL(LIST_ITEM_TABLE_CREATE);
+        db.execSQL(TODOLIST_TABLE_CREATE);
+        db.execSQL(USER_TODOLIST_TABLE_CREATE);
+        db.execSQL(TODO_TABLE_CREATE);
     }
 
     @Override
@@ -113,8 +114,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
          * Mise a jour de la table
          */
         db.execSQL(USER_TABLE_DROP);
-        db.execSQL(MEMO_TABLE_DROP);
-        db.execSQL(USER_MEMO_TABLE_DROP);
+        db.execSQL(TODOLIST_TABLE_DROP);
+        db.execSQL(USER_TODOLIST_TABLE_DROP);
         onCreate(db);
     }
 }

@@ -3,14 +3,14 @@ package com.todos.hkboam.todos.bdd.modal;
 /**
  * Created by mohamedamin on 18/10/2015.
  */
-public class UserList {
+public class UserTodoList {
     // Notez que l'identifiant est un long
     private long id;
     private long user;
     private long list;
     private long rights;
 
-    public UserList(long id, long user, long list, long rights) {
+    public UserTodoList(long id, long user, long list, long rights) {
         this.id = id;
         this.user = user;
         this.list = list;

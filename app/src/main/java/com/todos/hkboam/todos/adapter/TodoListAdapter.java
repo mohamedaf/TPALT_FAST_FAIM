@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.todos.hkboam.todos.R;
-import com.todos.hkboam.todos.bdd.modal.ListItem;
+import com.todos.hkboam.todos.bdd.modal.TodoList;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -17,22 +17,23 @@ import java.util.Date;
 /**
  * Created by Hassan K on 30/10/2015.
  */
-public class ListItemAdapter extends ArrayAdapter<ListItem> {
-    public ListItemAdapter(Context context, java.util.List objects) {
+public class TodoListAdapter extends ArrayAdapter<TodoList> {
+    public TodoListAdapter(Context context, java.util.List objects) {
         super(context, 0, objects);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-// Get the data item for this position
-        ListItem listItem = getItem(position);
+        // Get the data item for this position
+        TodoList todoList = getItem(position);
+
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.listitem_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.todolist, parent, false);
         }
-        convertView.setId((int) listItem.getId());
+        convertView.setId((int) todoList.getId());
 
-        Date date = new Date(listItem.getModification_date());
+        Date date = new Date(todoList.getModification_date());
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         String sDate = "";
@@ -40,11 +41,11 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
 
         Log.i("Dates", sDate);
 
-        TextView listItem_content = (TextView) convertView.findViewById(R.id.listItem_content);
-        TextView listItem_date = (TextView) convertView.findViewById(R.id.listItem_date);
+        TextView memo_title = (TextView) convertView.findViewById(R.id.list_title);
+        TextView memo_date = (TextView) convertView.findViewById(R.id.list_date);
 
-        listItem_content.setText(listItem.getContent());
-        listItem_date.setText(sDate);
+        memo_title.setText(todoList.getTitle());
+        memo_date.setText(sDate);
 
         return convertView;
     }

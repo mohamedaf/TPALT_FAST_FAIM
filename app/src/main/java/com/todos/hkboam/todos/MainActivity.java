@@ -20,15 +20,15 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.todos.hkboam.todos.adapter.ListAdapter;
-import com.todos.hkboam.todos.bdd.dao.ListDAO;
-import com.todos.hkboam.todos.bdd.modal.List;
+import com.todos.hkboam.todos.adapter.TodoListAdapter;
+import com.todos.hkboam.todos.bdd.dao.TodoListDAO;
+import com.todos.hkboam.todos.bdd.modal.TodoList;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private ListDAO listDAO = new ListDAO(this);
+    private TodoListDAO todoListDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent intent = new Intent(MainActivity.this, ListItemEditActivity.class);
+                Intent intent = new Intent(MainActivity.this, null);
                 startActivity(intent);
             }
         });
@@ -67,23 +67,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void init() {
-        if (listDAO == null) {
-            listDAO = new ListDAO(this);
+        if (todoListDAO == null) {
+            todoListDAO = new TodoListDAO(this);
         }
-        listDAO.open();
-        final ArrayList<List> aaa = listDAO.toutSelectionner();
-        listDAO.close();
+        final ArrayList<TodoList> tl_list = todoListDAO.toutSelectionner();
 
         final ListView listView = (ListView) findViewById(R.id.listView);
 
-
-        ListAdapter mA = new ListAdapter(this, aaa);
+        TodoListAdapter mA = new TodoListAdapter(this, tl_list);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, ListItemViewActivity.class);
-                Bundle b = new Bundle();
-                intent.putExtra("memo", aaa.get(position));
+                Intent intent = new Intent(MainActivity.this, TodoListActivity.class);
+                intent.putExtra("tl_id", tl_list.get(position).getId());
                 startActivity(intent);
             }
         });
@@ -138,11 +134,11 @@ public class MainActivity extends AppCompatActivity
                         SparseBooleanArray checked = listView.getCheckedItemPositions();
                         for (int i = 0; i < checked.size(); i++) {
                             if (checked.valueAt(i) == true) {
-                                List m = (List) listView.getItemAtPosition(checked.keyAt(i));
+                                TodoList m = (TodoList) listView.getItemAtPosition(checked.keyAt(i));
                                 Log.i("Checked : ", m.getTitle());
-                                listDAO.open();
-                                listDAO.supprimer(m.getId());
-                                listDAO.close();
+                                todoListDAO.open();
+                                todoListDAO.supprimer(m.getId());
+                                todoListDAO.close();
                                 init();
                             }
                         }
