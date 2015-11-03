@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.todos.hkboam.todos.Utils.Util;
 import com.todos.hkboam.todos.bdd.dao.UserDAO;
 import com.todos.hkboam.todos.bdd.modal.User;
 
@@ -100,18 +101,29 @@ public class RegisterActivity extends AppCompatActivity {
                     UserDAO userd = new UserDAO(RegisterActivity.this);
                     userd.open();
                     User u = new User(1, mFullName.getText().toString(), mEmailView.getText().toString(), mPasswordView.getText().toString());
-                    userd.ajouter(u);
-                    userd.close();
 
-                    // debug
-                    Log.d("deb", "deb register");
-                    Log.d("deb", u.getUsername());
-                    Log.d("deb", u.getMail());
-                    Log.d("deb", u.getPassword());
+                    // verifier si le mail existe déjà
+                    User u2 = userd.selectionner(mEmailView.getText().toString());
 
-                    // Switching to main screen
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(i);
+                    if(u2 != null){
+                        // adresse mail déjà existante erreur !
+                        mError.setText(R.string.error_user_exist);
+                        userd.close();
+                    }
+                    else{
+                        userd.ajouter(u);
+                        userd.close();
+
+                        // debug
+                        Log.d("deb", "deb register");
+                        Log.d("deb", u.getUsername());
+                        Log.d("deb", u.getMail());
+                        Log.d("deb", u.getPassword());
+
+                        // Switching to main screen
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(i);
+                    }
                 }
                 if(fullNameV != null)
                     mError.setText(fullNameV);

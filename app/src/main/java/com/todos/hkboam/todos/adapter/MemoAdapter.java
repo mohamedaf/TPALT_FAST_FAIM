@@ -25,7 +25,7 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-// Get the data item for this position
+        // Get the data item for this position
         Memo memo = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {

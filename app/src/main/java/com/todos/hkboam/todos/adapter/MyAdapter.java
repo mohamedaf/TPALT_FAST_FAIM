@@ -23,7 +23,7 @@ public class MyAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-// Get the data item for this position
+        // Get the data item for this position
         String text = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {

@@ -7,6 +7,10 @@
             android:icon="@android:drawable/ic_lock_idle_lock"
             android:title="@string/login_register" />
         <item
+            android:id="@+id/nav_my_lists"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="@string/my_lists" />
+        <item
             android:id="@+id/nav_synchronize"
             android:icon="@android:drawable/ic_menu_rotate"
             android:title="@string/synchronize" />
