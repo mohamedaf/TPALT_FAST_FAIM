@@ -83,4 +83,16 @@ public class UserDAO extends DAOBase {
             return u;
         } else return null;
     }
+
+    /**
+     * @param mail l'email de l'utilisateur à récupérer
+     */
+    public User selectionner(String mail) {
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where mail=?", new String[]{mail});
+        if (c.moveToNext()) {
+            User u = new User(c.getLong(0), c.getString(1), c.getString(2), c.getString(3));
+            c.close();
+            return u;
+        } else return null;
+    }
 }

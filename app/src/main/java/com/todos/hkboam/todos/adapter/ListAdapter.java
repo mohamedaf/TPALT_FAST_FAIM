@@ -24,8 +24,9 @@ public class ListAdapter extends ArrayAdapter<List> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-// Get the data item for this position
+        // Get the data item for this position
         List list = getItem(position);
+
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);

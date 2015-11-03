@@ -56,15 +56,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        /*UserDAO userd = new UserDAO(this);
-        userd.open();
-        User u = new User(1, "toto.upmc", "toto@hotmail.fr", "toutou");
-        userd.ajouter(u);
-        u = userd.selectionner(1);
-        userd.close();*/
-
-
     }
 
     @Override
@@ -218,6 +209,8 @@ public class MainActivity extends AppCompatActivity
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             return true;
+        } else if (id == R.id.nav_my_lists) {
+
         } else if (id == R.id.nav_synchronize) {
 
         } else if (id == R.id.nav_manage) {
