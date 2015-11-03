@@ -1,27 +1,24 @@
 package com.todos.hkboam.todos;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.todos.hkboam.todos.bdd.dao.MemoDAO;
-import com.todos.hkboam.todos.bdd.modal.Memo;
+import com.todos.hkboam.todos.bdd.dao.ListDAO;
+import com.todos.hkboam.todos.bdd.dao.ListItemDAO;
+import com.todos.hkboam.todos.bdd.modal.List;
+import com.todos.hkboam.todos.bdd.modal.ListItem;
 
 import java.util.Calendar;
 
-public class MemoEditActivity extends AppCompatActivity {
-    private Memo memo;
-    private MemoDAO memoDao;
+public class ListItemEditActivity extends AppCompatActivity {
+    private ListItem listItem;
+    private ListItemDAO listItemDAO;
     private EditText edit;
     private Toast t;
 
@@ -30,12 +27,13 @@ public class MemoEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_edit);
         Intent intent = getIntent();
-        memo = (Memo) intent.getSerializableExtra("memo");
+        listItemDAO = new ListItemDAO(this);
+        listItem = listItemDAO.selectionner(intent.getLongExtra("list_id",0));
         edit = (EditText) findViewById(R.id.memo_edit_edit);
 
 
-        if (memo != null) {
-            edit.setText(memo.getContent());
+        if (listItem != null) {
+            edit.setText(listItem.getContent());
         }
     }
 
@@ -77,17 +75,14 @@ public class MemoEditActivity extends AppCompatActivity {
             t = Toast.makeText(this, R.string.memo_empty, Toast.LENGTH_SHORT);
             t.show();
         } else {
-            memoDao = new MemoDAO(this);
-            memoDao.open();
-            if (memo == null) {
-                memo = new Memo(edit.getText().toString());
-                memo.setModification_date(Calendar.getInstance().getTimeInMillis());
-                memoDao.ajouter(memo);
+            if (listItem == null) {
+                listItem = new ListItem(edit.getText().toString());
+                listItem.setModification_date(Calendar.getInstance().getTimeInMillis());
+                listItemDAO.ajouter(listItem);
             } else {
-                memo.setContent(edit.getText().toString());
-                memoDao.modifier(memo);
+                listItem.setContent(edit.getText().toString());
+                listItemDAO.modifier(listItem);
             }
-            memoDao.close();
             t = Toast.makeText(this, R.string.memo_save, Toast.LENGTH_SHORT);
             t.show();
         }

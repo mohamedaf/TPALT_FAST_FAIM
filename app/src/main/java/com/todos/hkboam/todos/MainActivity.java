@@ -3,7 +3,6 @@ package com.todos.hkboam.todos;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
@@ -21,18 +20,15 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.todos.hkboam.todos.adapter.MemoAdapter;
-import com.todos.hkboam.todos.adapter.MyAdapter;
-import com.todos.hkboam.todos.bdd.dao.MemoDAO;
-import com.todos.hkboam.todos.bdd.dao.UserDAO;
-import com.todos.hkboam.todos.bdd.modal.Memo;
-import com.todos.hkboam.todos.bdd.modal.User;
+import com.todos.hkboam.todos.adapter.ListAdapter;
+import com.todos.hkboam.todos.bdd.dao.ListDAO;
+import com.todos.hkboam.todos.bdd.modal.List;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private MemoDAO memod = new MemoDAO(this);
+    private ListDAO listDAO = new ListDAO(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +43,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent intent = new Intent(MainActivity.this, MemoEditActivity.class);
+                Intent intent = new Intent(MainActivity.this, ListItemEditActivity.class);
                 startActivity(intent);
             }
         });
@@ -80,21 +76,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void init() {
-        if (memod == null) {
-            memod = new MemoDAO(this);
+        if (listDAO == null) {
+            listDAO = new ListDAO(this);
         }
-        memod.open();
-        final ArrayList<Memo> aaa = memod.toutSelectionner();
-        memod.close();
+        listDAO.open();
+        final ArrayList<List> aaa = listDAO.toutSelectionner();
+        listDAO.close();
 
         final ListView listView = (ListView) findViewById(R.id.listView);
 
 
-        MemoAdapter mA = new MemoAdapter(this, aaa);
+        ListAdapter mA = new ListAdapter(this, aaa);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, MemoViewActivity.class);
+                Intent intent = new Intent(MainActivity.this, ListItemViewActivity.class);
                 Bundle b = new Bundle();
                 intent.putExtra("memo", aaa.get(position));
                 startActivity(intent);
@@ -151,11 +147,11 @@ public class MainActivity extends AppCompatActivity
                         SparseBooleanArray checked = listView.getCheckedItemPositions();
                         for (int i = 0; i < checked.size(); i++) {
                             if (checked.valueAt(i) == true) {
-                                Memo m = (Memo) listView.getItemAtPosition(checked.keyAt(i));
+                                List m = (List) listView.getItemAtPosition(checked.keyAt(i));
                                 Log.i("Checked : ", m.getTitle());
-                                memod.open();
-                                memod.supprimer(m.getId());
-                                memod.close();
+                                listDAO.open();
+                                listDAO.supprimer(m.getId());
+                                listDAO.close();
                                 init();
                             }
                         }

@@ -5,15 +5,13 @@ import java.io.Serializable;
 /**
  * Created by mohamedamin on 18/10/2015.
  */
-public class Memo implements Serializable {
+public class List implements Serializable {
     private long id;
-    private String content;
-    private String title;
     private long modification_date;
     private long author;
+    private String title;
 
-    public Memo(String content) {
-        this.content = content;
+    /*public List(String content) {
 
         String[] tab = content.split(" ");
         if (tab.length == 1) {
@@ -23,22 +21,14 @@ public class Memo implements Serializable {
             this.title = tab[0] + " " + tab[1];
         } else title = "";
 
+    }*/
+
+    public List(String title){
+        this.title = title;
     }
 
-    public Memo(long id, String content) {
+    public List(long id, String title) {
         this.id = id;
-        this.content = content;
-        String[] tab = content.split(" ");
-        if (tab.length == 1) {
-            this.title = tab[0];
-        } else if (tab.length > 1) {
-            this.title = tab[0] + " " + tab[1];
-        } else title = "";
-    }
-
-    public Memo(long id, String content, String title) {
-        this.id = id;
-        this.content = content;
         this.title = title;
     }
 
@@ -74,17 +64,4 @@ public class Memo implements Serializable {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-        String[] tab = content.split(" ");
-        if (tab.length == 1) {
-            this.title = tab[0];
-        } else if (tab.length > 1) {
-            this.title = tab[0] + " " + tab[1];
-        } else title = "";
-    }
 }

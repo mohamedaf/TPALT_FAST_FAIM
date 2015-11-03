@@ -19,21 +19,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     /**
-     * MEMO
+     * LIST
      */
-    public static final String MEMO_KEY = "id";
-    public static final String MEMO_CONTENT = "content";
-    public static final String MEMO_MODIFICATION_DATE = "modification_date";
-    public static final String MEMO_AUTHOR = "author";
-    public static final String MEMO_TABLE_NAME = "memo";
+    public static final String LIST_KEY = "id";
+    public static final String LIST_MODIFICATION_DATE = "modification_date";
+    public static final String LIST_AUTHOR = "author";
+    public static final String LIST_TITLE = "title";
+    public static final String LIST_TABLE_NAME = "list";
 
     /**
-     * USER_MEMO
+     * USER_LIST
      */
-    public static final String USER_MEMO_KEY = "id";
-    public static final String USER_MEMO_USER = "user";
-    public static final String USER_MEMO_MEMO = "memo";
-    public static final String USER_MEMO_TABLE_NAME = "userMemo";
+    public static final String USER_LIST_KEY = "id";
+    public static final String USER_LIST_USER = "user";
+    public static final String USER_LIST_LIST = "list";
+    public static final String USER_LIST_RIGHTS = "rights";
+    public static final String USER_LIST_TABLE_NAME = "userList";
+
+    /**
+     * LIST_ITEM
+     */
+    public static final String LIST_ITEM_KEY = "id";
+    public static final String LIST_ITEM_MODIFICATION_DATE = "modification_date";
+    public static final String LIST_ITEM_LIST = "list";
+    public static final String LIST_ITEM_AUTHOR = "author";
+    public static final String LIST_ITEM_CONTENT = "content";
+    public static final String LIST_ITEM_TABLE_NAME = "listItem";
 
     /**
      * USER
@@ -49,26 +60,37 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * MEMO
      */
-    public static final String MEMO_TABLE_CREATE =
-            "CREATE TABLE " + MEMO_TABLE_NAME + " (" +
-                    MEMO_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    MEMO_CONTENT + " TEXT NOT NULL, " +
-                    MEMO_MODIFICATION_DATE + " INTEGER NOT NULL, " +
-                    MEMO_AUTHOR + " INTEGER NOT NULL, " +
-                    "FOREIGN KEY (" + MEMO_AUTHOR + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "));";
-    public static final String MEMO_TABLE_DROP = "DROP TABLE IF EXISTS " + MEMO_TABLE_NAME + ";";
+    public static final String LIST_TABLE_CREATE =
+            "CREATE TABLE " + LIST_TABLE_NAME + " (" +
+                    LIST_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    LIST_MODIFICATION_DATE + " INTEGER NOT NULL, " +
+                    LIST_AUTHOR + " INTEGER NOT NULL, " +
+                    LIST_TITLE + " TEXT NOT NULL, " +
+                    "FOREIGN KEY (" + LIST_AUTHOR + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "));";
+    public static final String MEMO_TABLE_DROP = "DROP TABLE IF EXISTS " + LIST_TABLE_NAME + ";";
 
     /**
      * USER_MEMO
      */
-    public static final String USER_MEMO_TABLE_CREATE =
-            "CREATE TABLE " + USER_MEMO_TABLE_NAME + " (" +
-                    USER_MEMO_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    USER_MEMO_USER + " INTEGER NOT NULL, " +
-                    USER_MEMO_MEMO + " INTEGER NOT NULL, " +
-                    "FOREIGN KEY (" + USER_MEMO_USER + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "), " +
-                    "FOREIGN KEY (" + USER_MEMO_MEMO + ") REFERENCES " + MEMO_TABLE_NAME + "(" + MEMO_KEY + "));";
-    public static final String USER_MEMO_TABLE_DROP = "DROP TABLE IF EXISTS " + USER_MEMO_TABLE_NAME + ";";
+    public static final String USER_LIST_TABLE_CREATE =
+            "CREATE TABLE " + USER_LIST_TABLE_NAME + " (" +
+                    USER_LIST_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    USER_LIST_USER + " INTEGER NOT NULL, " +
+                    USER_LIST_LIST + " INTEGER NOT NULL, " +
+                    USER_LIST_RIGHTS + " INTEGER NOT NULL, " +
+                    "FOREIGN KEY (" + USER_LIST_USER + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "), " +
+                    "FOREIGN KEY (" + USER_LIST_LIST + ") REFERENCES " + LIST_TABLE_NAME + "(" + LIST_KEY + "));";
+    public static final String USER_MEMO_TABLE_DROP = "DROP TABLE IF EXISTS " + USER_LIST_TABLE_NAME + ";";
+
+    public static final String LIST_ITEM_TABLE_CREATE =
+            "CREATE TABLE " + LIST_ITEM_TABLE_NAME + " (" +
+                    LIST_ITEM_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    LIST_ITEM_MODIFICATION_DATE + " INTEGER NOT NULL, " +
+                    LIST_ITEM_LIST + " INTEGER NOT NULL, " +
+                    LIST_ITEM_AUTHOR + " INTEGER NOT NULL, " +
+                    LIST_ITEM_CONTENT + " TEXT NOT NULL, " +
+                    "FOREIGN KEY (" + LIST_ITEM_AUTHOR + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "), " +
+                    "FOREIGN KEY (" + LIST_ITEM_LIST + ") REFERENCES " + LIST_TABLE_NAME + "(" + LIST_KEY + "));";
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -80,8 +102,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
          * Creation de la table des utilisateurs de l'application
          */
         db.execSQL(USER_TABLE_CREATE);
-        db.execSQL(MEMO_TABLE_CREATE);
-        db.execSQL(USER_MEMO_TABLE_CREATE);
+        db.execSQL(LIST_TABLE_CREATE);
+        db.execSQL(USER_LIST_TABLE_CREATE);
+        db.execSQL(LIST_ITEM_TABLE_CREATE);
     }
 
     @Override

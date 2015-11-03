@@ -3,16 +3,18 @@ package com.todos.hkboam.todos.bdd.modal;
 /**
  * Created by mohamedamin on 18/10/2015.
  */
-public class UserMemo {
+public class UserList {
     // Notez que l'identifiant est un long
     private long id;
     private long user;
-    private long memo;
+    private long list;
+    private long rights;
 
-    public UserMemo(long id, long user, long memo) {
+    public UserList(long id, long user, long list, long rights) {
         this.id = id;
         this.user = user;
-        this.memo = memo;
+        this.list = list;
+        this.rights = rights;
     }
 
     public long getId() {
@@ -31,11 +33,19 @@ public class UserMemo {
         this.user = user;
     }
 
-    public long getMemo() {
-        return memo;
+    public long getList() {
+        return list;
     }
 
-    public void setMemo(long memo) {
-        this.memo = memo;
+    public void setlist(long list) {
+        this.list = list;
+    }
+
+    public long getRights() {
+        return rights;
+    }
+
+    public void setRights(long rights) {
+        this.rights = rights;
     }
 }
