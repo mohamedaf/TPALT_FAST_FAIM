@@ -72,11 +72,13 @@ public class TodoListDAO extends DAOBase {
     public ArrayList<TodoList> toutSelectionner() {
         ArrayList<TodoList> res = new ArrayList<TodoList>();
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME, new String[0]);
-        int colKey = c.getColumnIndex(KEY);
-        int colModDate = c.getColumnIndex(MODIFICATION_DATE);
-        int colAuthor = c.getColumnIndex(AUTHOR);
-        int colTitle = c.getColumnIndex(TITLE);
+        int colKey, colModDate, colAuthor, colTitle;
         while (c.moveToNext()) {
+            colKey = c.getColumnIndex(KEY);
+            colModDate = c.getColumnIndex(MODIFICATION_DATE);
+            colAuthor = c.getColumnIndex(AUTHOR);
+            colTitle = c.getColumnIndex(TITLE);
+
             TodoList m = new TodoList(c.getLong(colKey), c.getString(colTitle));
             m.setModification_date(c.getLong(colModDate));
             m.setAuthor(c.getLong(colAuthor));
@@ -85,4 +87,46 @@ public class TodoListDAO extends DAOBase {
         c.close();
         return res;
     }
+
+    /**
+     * @param ids l'identifiant du métier à récupérer
+     */
+    public ArrayList<TodoList> selectionner(ArrayList<Long> ids) {
+        ArrayList<TodoList> res = new ArrayList<TodoList>(ids.size());
+        Cursor c = null;
+        for (long id : ids) {
+            c = mDb.rawQuery("select * from " + TABLE_NAME + " where id=?", new String[]{String.valueOf(id)});
+            int colKey = c.getColumnIndex(KEY);
+            int colModDate = c.getColumnIndex(MODIFICATION_DATE);
+            int colAuthor = c.getColumnIndex(AUTHOR);
+            int colTitle = c.getColumnIndex(TITLE);
+            if (c.moveToNext()) {
+                TodoList m = new TodoList(c.getLong(colKey), c.getLong(colModDate), c.getLong(colAuthor), c.getString(colTitle));
+                res.add(m);
+
+
+            }
+        }
+        if (c != null)
+            c.close();
+        return res;
+    }
+
+    public ArrayList<TodoList> getByAuthorId(long authorId) {
+        ArrayList<TodoList> res = new ArrayList<TodoList>();
+        Cursor c = null;
+        c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + AUTHOR + "=?", new String[]{String.valueOf(authorId)});
+        int colKey = c.getColumnIndex(KEY);
+        int colModDate = c.getColumnIndex(MODIFICATION_DATE);
+        int colAuthor = c.getColumnIndex(AUTHOR);
+        int colTitle = c.getColumnIndex(TITLE);
+        while (c.moveToNext()) {
+            TodoList m = new TodoList(c.getLong(colKey), c.getLong(colModDate), c.getLong(colAuthor), c.getString(colTitle));
+            res.add(m);
+        }
+        if (c != null)
+            c.close();
+        return res;
+    }
+
 }

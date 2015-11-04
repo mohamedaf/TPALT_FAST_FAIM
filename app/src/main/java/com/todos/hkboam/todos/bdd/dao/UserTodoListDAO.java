@@ -5,12 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.todos.hkboam.todos.bdd.DatabaseHandler;
+import com.todos.hkboam.todos.bdd.modal.TodoList;
 import com.todos.hkboam.todos.bdd.modal.UserTodoList;
+
+import java.util.ArrayList;
 
 /**
  * Created by mohamedamin on 18/10/2015.
  */
-public class UserTodoListDAO extends DAOBase{
+public class UserTodoListDAO extends DAOBase {
     public static final String KEY = DatabaseHandler.USER_TODOLIST_KEY;
     public static final String USER = DatabaseHandler.USER_TODOLIST_USER;
     public static final String LIST = DatabaseHandler.USER_TODOLIST_LIST;
@@ -36,18 +39,18 @@ public class UserTodoListDAO extends DAOBase{
      * @param id l'identifiant du métier à supprimer
      */
     public void supprimer(long id) {
-        mDb.delete(TABLE_NAME, KEY + " = ?", new String[] {String.valueOf(id)});
+        mDb.delete(TABLE_NAME, KEY + " = ?", new String[]{String.valueOf(id)});
     }
 
     /**
-     * @param um le métier modifié
+     * @param ul le métier modifié
      */
     public void modifier(UserTodoList ul) {
         ContentValues value = new ContentValues();
         value.put(USER, ul.getUser());
         value.put(LIST, ul.getList());
         value.put(RIGHTS, ul.getRights());
-        mDb.update(TABLE_NAME, value, KEY  + " = ?", new String[] {String.valueOf(ul.getId())});
+        mDb.update(TABLE_NAME, value, KEY + " = ?", new String[]{String.valueOf(ul.getId())});
     }
 
     /**
@@ -59,11 +62,26 @@ public class UserTodoListDAO extends DAOBase{
         int colUser = c.getColumnIndex(USER);
         int colList = c.getColumnIndex(LIST);
         int colRights = c.getColumnIndex(RIGHTS);
-        if(c.moveToNext()){
+
+        if (c.moveToNext()) {
             UserTodoList um = new UserTodoList(c.getLong(colKey), c.getLong(colUser), c.getLong(colList), c.getLong(colRights));
             c.close();
             return um;
+        } else return null;
+    }
+
+    public ArrayList<UserTodoList> getByUserId(long userId) {
+        ArrayList<UserTodoList> res = new ArrayList<UserTodoList>();
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + USER + "=?", new String[]{String.valueOf(userId)});
+        int colKey = c.getColumnIndex(KEY);
+        int colUser = c.getColumnIndex(USER);
+        int colList = c.getColumnIndex(LIST);
+        int colRights = c.getColumnIndex(RIGHTS);
+        while (c.moveToNext()) {
+            UserTodoList m = new UserTodoList(colKey, colUser, colList, colRights);
+            res.add(m);
         }
-        else return null;
+        c.close();
+        return res;
     }
 }

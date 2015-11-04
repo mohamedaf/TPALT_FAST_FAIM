@@ -114,4 +114,16 @@
     <string name="title_activity_todo_list">TodoListActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="action_add">New</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="new_todo_list">New ToDo list</string>
+    <string name="new_todo">New ToDo</string>
+
+
+    <string name="cannot_have_empty_todo">ToDo cannot be empty !</string>
+    <string name="cannot_have_empty_title">Title cannot be empty !</string>
+    <string name="logout">Logout</string>
 </resources>

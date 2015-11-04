@@ -9,14 +9,48 @@ public class Todo {
     private long list;
     private long author;
     private String content;
+    private int done;
 
-    public Todo(String content){
+    public Todo(String content) {
         this.content = content;
     }
 
-    public Todo(long id, String content){
+    public Todo(long id, long modification_date, long list, long author, String content) {
+        this.id = id;
+        this.modification_date = modification_date;
+        this.list = list;
+        this.author = author;
+        this.content = content;
+    }
+
+    public Todo(long modification_date, long list, long author, String content) {
+        this.modification_date = modification_date;
+        this.list = list;
+        this.author = author;
+        this.content = content;
+    }
+
+    public Todo(long id, long modification_date, long list, long author, String content, int done) {
+
+        this.id = id;
+        this.modification_date = modification_date;
+        this.list = list;
+        this.author = author;
+        this.content = content;
+        this.done = done;
+    }
+
+    public Todo(long id, String content) {
         this.id = id;
         this.content = content;
+    }
+
+    public int getDone() {
+        return done;
+    }
+
+    public void setDone(int done) {
+        this.done = done;
     }
 
     public long getId() {
@@ -58,4 +92,6 @@ public class Todo {
     public void setContent(String content) {
         this.content = content;
     }
+
+
 }

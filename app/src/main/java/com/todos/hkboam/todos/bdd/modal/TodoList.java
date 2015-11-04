@@ -5,25 +5,26 @@ import java.io.Serializable;
 /**
  * Created by mohamedamin on 18/10/2015.
  */
-public class TodoList implements Serializable {
+public class TodoList implements Serializable, Comparable<TodoList> {
     private long id;
     private long modification_date;
     private long author;
     private String title;
 
-    /*public List(String content) {
+    public TodoList(String title) {
+        this.title = title;
+    }
 
-        String[] tab = content.split(" ");
-        if (tab.length == 1) {
-            this.title = tab[0];
-        } else if (tab.length > 1) {
+    public TodoList(long id, long modification_date, long author, String title) {
+        this.id = id;
+        this.modification_date = modification_date;
+        this.author = author;
+        this.title = title;
+    }
 
-            this.title = tab[0] + " " + tab[1];
-        } else title = "";
-
-    }*/
-
-    public TodoList(String title){
+    public TodoList(long modification_date, long author, String title) {
+        this.modification_date = modification_date;
+        this.author = author;
         this.title = title;
     }
 
@@ -64,4 +65,14 @@ public class TodoList implements Serializable {
         this.id = id;
     }
 
+    @Override
+    public int compareTo(TodoList another) {
+        if (another.getModification_date() < this.modification_date) {
+            return -1;
+        }
+        if (another.getModification_date() > this.modification_date) {
+            return 1;
+        }
+        return 0;
+    }
 }

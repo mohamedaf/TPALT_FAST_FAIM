@@ -2,10 +2,12 @@ package com.todos.hkboam.todos.bdd.modal;
 
 import com.todos.hkboam.todos.Utils.Util;
 
+import java.io.Serializable;
+
 /**
  * Created by mohamedamin on 18/10/2015.
  */
-public class User {
+public class User implements Serializable {
     private long id;
     private String username;
     private String mail;

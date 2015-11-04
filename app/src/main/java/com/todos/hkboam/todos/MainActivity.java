@@ -3,37 +3,45 @@ package com.todos.hkboam.todos;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.view.ActionMode;
-import android.view.MenuInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.todos.hkboam.todos.adapter.TodoListAdapter;
+import com.todos.hkboam.todos.adapter.MainAdapter;
 import com.todos.hkboam.todos.bdd.dao.TodoListDAO;
+import com.todos.hkboam.todos.bdd.dao.UserTodoListDAO;
 import com.todos.hkboam.todos.bdd.modal.TodoList;
+import com.todos.hkboam.todos.bdd.modal.UserTodoList;
+import com.todos.hkboam.todos.dialog.ToDoListDialogFragment;
+import com.todos.hkboam.todos.persistent.CurrentUser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private TodoListDAO todoListDAO;
+    private UserTodoListDAO userTodoListDAO = new UserTodoListDAO(this);
+    private TodoListDAO todoListDAO = new TodoListDAO(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -43,8 +51,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent intent = new Intent(MainActivity.this, null);
-                startActivity(intent);
+                ToDoListDialogFragment toDoListDialogFragment = new ToDoListDialogFragment();
+                toDoListDialogFragment.show(getFragmentManager(), "toDoListDialogFragment");
             }
         });
 
@@ -59,27 +67,31 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    protected void onResume() {
+        super.onResume();
         init();
-
     }
 
     private void init() {
-        if (todoListDAO == null) {
-            todoListDAO = new TodoListDAO(this);
-        }
-        final ArrayList<TodoList> tl_list = todoListDAO.toutSelectionner();
+        long authorId = CurrentUser.getInstance().getUser().getId();
+        userTodoListDAO.open();
+        ArrayList<UserTodoList> ut_list = userTodoListDAO.getByUserId(authorId);
+        userTodoListDAO.close();
+        todoListDAO.open();
+        final ArrayList<TodoList> todo_list = todoListDAO.selectionner(utlToListId(ut_list));
+        todo_list.addAll(todoListDAO.getByAuthorId(authorId));
+        todoListDAO.close();
 
-        final ListView listView = (ListView) findViewById(R.id.listView);
+        Collections.sort(todo_list);
 
-        TodoListAdapter mA = new TodoListAdapter(this, tl_list);
+        final ListView listView = (ListView) findViewById(R.id.mainListView);
+
+        MainAdapter mA = new MainAdapter(this, todo_list);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, TodoListActivity.class);
-                intent.putExtra("tl_id", tl_list.get(position).getId());
+                intent.putExtra("todoList", todo_list.get(position));
                 startActivity(intent);
             }
         });
@@ -186,10 +198,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent i = new Intent(this, SettingsActivity.class);
-            startActivity(i);
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -202,8 +215,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_login) {
+            CurrentUser.getInstance().setUser(null);
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
+            finish();
             return true;
         } else if (id == R.id.nav_my_lists) {
 
@@ -221,5 +236,14 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private ArrayList<Long> utlToListId(ArrayList<UserTodoList> utl) {
+        ArrayList<Long> res = new ArrayList<Long>(utl.size());
+        for (UserTodoList u : utl) {
+            res.add(u.getList());
+        }
+        return res;
+    }
+
 
 }

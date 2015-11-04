@@ -110,4 +110,16 @@
 
     <string name="selected_items">mémos sélectionnés</string>
     <string name="selected_item">mémo sélectionné</string>
+
+    <string name="action_add">Nouveau</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Annuler</string>
+
+    <string name="new_todo_list">Nouvelle liste de tâches</string>
+    <string name="new_todo">Nouvelle tâche</string>
+
+    <string name="cannot_have_empty_todo">Un ToDo ne peut être vide !</string>
+    <string name="cannot_have_empty_title">Le titre ne peut être vide !</string>
+    <string name="logout">Déconnexion</string>
 </resources>

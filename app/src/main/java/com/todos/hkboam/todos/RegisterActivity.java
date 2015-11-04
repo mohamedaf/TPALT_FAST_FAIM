@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.todos.hkboam.todos.Utils.Util;
 import com.todos.hkboam.todos.bdd.dao.UserDAO;
 import com.todos.hkboam.todos.bdd.modal.User;
+import com.todos.hkboam.todos.persistent.CurrentUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,20 +84,20 @@ public class RegisterActivity extends AppCompatActivity {
                 // vider le champs d'erreur
                 mError.setText("");
 
-                if(fullNameV != null){
+                if (fullNameV != null) {
                     Log.d("deb", "full name: " + mFullName.getText().toString());
                     Log.d("deb", "err full name: " + fullNameV);
                 }
-                if(mailV != null){
+                if (mailV != null) {
                     Log.d("deb", "mail: " + mEmailView.getText().toString());
                     Log.d("deb", "err mail: " + mailV);
                 }
-                if(passV != null){
+                if (passV != null) {
                     Log.d("deb", "pass: " + mPasswordView.getText().toString());
                     Log.d("deb", "err pass: " + passV);
                 }
 
-                if(fullNameV == null && mailV == null && passV == null){
+                if (fullNameV == null && mailV == null && passV == null) {
                     // register User
                     UserDAO userd = new UserDAO(RegisterActivity.this);
                     userd.open();
@@ -105,12 +106,11 @@ public class RegisterActivity extends AppCompatActivity {
                     // verifier si le mail existe déjà
                     User u2 = userd.selectionner(mEmailView.getText().toString());
 
-                    if(u2 != null){
+                    if (u2 != null) {
                         // adresse mail déjà existante erreur !
                         mError.setText(R.string.error_user_exist);
                         userd.close();
-                    }
-                    else{
+                    } else {
                         userd.ajouter(u);
                         userd.close();
 
@@ -120,26 +120,28 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.d("deb", u.getMail());
                         Log.d("deb", u.getPassword());
 
+                        CurrentUser.getInstance().setUser(u);
                         // Switching to main screen
                         Intent i = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(i);
+                        finish();
                     }
                 }
-                if(fullNameV != null)
+                if (fullNameV != null)
                     mError.setText(fullNameV);
-                else if(mailV != null)
+                else if (mailV != null)
                     mError.setText(mailV);
-                else if(passV != null)
+                else if (passV != null)
                     mError.setText(passV);
             }
         });
     }
 
-    private String isFullNameValid(String fullName){
-        if (fullName == null || fullName.equals("")){
+    private String isFullNameValid(String fullName) {
+        if (fullName == null || fullName.equals("")) {
             return getString(R.string.error_fields);
         }
-        if (fullName.length() > 40){
+        if (fullName.length() > 40) {
             return getString(R.string.error_fullName);
         }
 
@@ -149,10 +151,10 @@ public class RegisterActivity extends AppCompatActivity {
     private String isEmailValid(String email) {
         String mailRegex = "^[a-zA-Z0-9\\.\\-_]+@[a-zA-Z0-9\\-_]+\\.[a-zA-Z]{2,4}$";
 
-        if (email == null || email.equals("")){
+        if (email == null || email.equals("")) {
             return getString(R.string.error_fields);
         }
-        if (email.length() > 40 || !email.matches(mailRegex)){
+        if (email.length() > 40 || !email.matches(mailRegex)) {
             return getString(R.string.error_invalid_email);
         }
 
@@ -160,10 +162,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private String isPasswordValid(String password) {
-        if (password == null || password.equals("")){
+        if (password == null || password.equals("")) {
             return getString(R.string.error_fields);
         }
-        if (password.length() < 6){
+        if (password.length() < 6) {
             return getString(R.string.error_invalid_password);
         }
 

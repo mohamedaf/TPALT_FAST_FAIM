@@ -13,9 +13,9 @@
     tools:showIn="@layout/app_bar_main">
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/mainListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/colorPrimary"
-        android:dividerHeight="2dp"></ListView>
+        android:dividerHeight="2dp" />
 </RelativeLayout>

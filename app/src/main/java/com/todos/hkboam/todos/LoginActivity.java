@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.todos.hkboam.todos.Utils.Util;
 import com.todos.hkboam.todos.bdd.dao.UserDAO;
 import com.todos.hkboam.todos.bdd.modal.User;
+import com.todos.hkboam.todos.persistent.CurrentUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,25 +81,24 @@ public class LoginActivity extends AppCompatActivity {
                 // vider le champs d'erreur
                 mError.setText("");
 
-                if(mailV == null && passV == null){
+                if (mailV == null && passV == null) {
                     // find User
                     UserDAO userd = new UserDAO(LoginActivity.this);
                     userd.open();
                     User u = userd.selectionner(mEmailView.getText().toString(), Util.MD5(mPasswordView.getText().toString()));
                     userd.close();
 
-                    if(u != null){
+                    if (u != null) {
+                        CurrentUser.getInstance().setUser(u);
                         // Switching to main screen
                         Intent i = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(i);
-                    }
-                    else
+                        finish();
+                    } else
                         mError.setText(getString(R.string.error_login));
-                }
-                else if(mailV == null){
+                } else if (mailV == null) {
                     mError.setText(passV);
-                }
-                else{
+                } else {
                     mError.setText(mailV);
                 }
             }
@@ -109,10 +109,10 @@ public class LoginActivity extends AppCompatActivity {
     private String isEmailValid(String email) {
         String mailRegex = "^[a-zA-Z0-9\\.\\-_]+@[a-zA-Z0-9\\-_]+\\.[a-zA-Z]{2,4}$";
 
-        if(email == null || email.equals("")){
+        if (email == null || email.equals("")) {
             return getString(R.string.error_fields);
         }
-        if(email.length() > 40 || !email.matches(mailRegex)){
+        if (email.length() > 40 || !email.matches(mailRegex)) {
             return getString(R.string.error_invalid_email);
         }
 
@@ -120,10 +120,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private String isPasswordValid(String password) {
-        if (password == null || password.equals("")){
+        if (password == null || password.equals("")) {
             return getString(R.string.error_fields);
         }
-        if (password.length() < 6){
+        if (password.length() < 6) {
             return getString(R.string.error_invalid_password);
         }
 

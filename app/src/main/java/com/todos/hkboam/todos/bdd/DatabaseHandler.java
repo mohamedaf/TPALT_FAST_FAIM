@@ -44,6 +44,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String TODO_LIST = "todoList";
     public static final String TODO_AUTHOR = "author";
     public static final String TODO_CONTENT = "content";
+    public static final String TODO_DONE = "done";
     public static final String TODO_TABLE_NAME = "todo";
 
     /**
@@ -89,6 +90,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     TODO_LIST + " INTEGER NOT NULL, " +
                     TODO_AUTHOR + " INTEGER NOT NULL, " +
                     TODO_CONTENT + " TEXT NOT NULL, " +
+                    TODO_DONE + " INTEGER NOT NULL, " +
                     "FOREIGN KEY (" + TODO_AUTHOR + ") REFERENCES " + USER_TABLE_NAME + "(" + USER_KEY + "), " +
                     "FOREIGN KEY (" + TODO_LIST + ") REFERENCES " + TODOLIST_TABLE_NAME + "(" + TODOLIST_KEY + "));";
     public static final String TODO_TABLE_DROP = "DROP TABLE IF EXISTS " + TODO_TABLE_NAME + ";";
