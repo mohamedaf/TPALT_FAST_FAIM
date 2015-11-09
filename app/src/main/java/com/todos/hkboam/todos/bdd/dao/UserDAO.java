@@ -6,6 +6,9 @@ import android.database.Cursor;
 
 import com.todos.hkboam.todos.bdd.DatabaseHandler;
 import com.todos.hkboam.todos.bdd.modal.User;
+import com.todos.hkboam.todos.persistent.CurrentUser;
+
+import java.util.ArrayList;
 
 
 /**
@@ -55,13 +58,15 @@ public class UserDAO extends DAOBase {
      * @param id l'identifiant du métier à récupérer
      */
     public User selectionner(long id) {
-        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where id=?", new String[]{String.valueOf(id)});
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + KEY + "=?",
+                new String[]{String.valueOf(id)});
         int colKey = c.getColumnIndex(KEY);
         int colUsername = c.getColumnIndex(USERNAME);
         int colMail = c.getColumnIndex(MAIL);
         int colPassword = c.getColumnIndex(PASSWORD);
         if (c.moveToNext()) {
-            User u = new User(c.getLong(colKey), c.getString(colUsername), c.getString(colMail), c.getString(colPassword));
+            User u = new User(c.getLong(colKey), c.getString(colUsername), c.getString(colMail),
+                    c.getString(colPassword));
             c.close();
             return u;
         } else return null;
@@ -72,13 +77,15 @@ public class UserDAO extends DAOBase {
      * @param mdp  le mot de passe de l'utilisateur à récupérer
      */
     public User selectionner(String mail, String mdp) {
-        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where mail=? and password=?", new String[]{mail, mdp});
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where mail=? and password=?",
+                new String[]{mail, mdp});
         int colKey = c.getColumnIndex(KEY);
         int colUsername = c.getColumnIndex(USERNAME);
         int colMail = c.getColumnIndex(MAIL);
         int colPassword = c.getColumnIndex(PASSWORD);
         if (c.moveToNext()) {
-            User u = new User(c.getLong(colKey), c.getString(colUsername), c.getString(colMail), c.getString(colPassword));
+            User u = new User(c.getLong(colKey), c.getString(colUsername), c.getString(colMail),
+                    c.getString(colPassword));
             c.close();
             return u;
         } else return null;
@@ -94,5 +101,28 @@ public class UserDAO extends DAOBase {
             c.close();
             return u;
         } else return null;
+    }
+
+    /**
+     *
+     */
+    public ArrayList<User> getAllExceptCurrent() {
+        ArrayList<User> res = new ArrayList<>();
+
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + KEY + "=?",
+                new String[]{String.valueOf(CurrentUser.getInstance().getUser().getId())});
+
+
+        int colKey = c.getColumnIndex(KEY);
+        int colUsername = c.getColumnIndex(USERNAME);
+        int colMail = c.getColumnIndex(MAIL);
+        int colPassword = c.getColumnIndex(PASSWORD);
+        while (c.moveToNext()) {
+            User u = new User(c.getInt(colKey), c.getString(colUsername), c.getString(colMail),
+                    c.getString(colPassword));
+            res.add(u);
+        }
+        c.close();
+        return res;
     }
 }

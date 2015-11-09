@@ -1,6 +1,7 @@
 package com.todos.hkboam.todos.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.todos.hkboam.todos.R;
@@ -41,17 +43,21 @@ public class TodoListAdapter extends ArrayAdapter<Todo> {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         String sDate = "";
-        sDate += cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.YEAR);
+        sDate += cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.YEAR)
+                + " " + cal.get(Calendar.HOUR) + " " + cal.get(Calendar.MINUTE) + " " + cal.get(Calendar.SECOND);
 
         Log.i("Dates", sDate);
 
-        CheckBox memo_date = (CheckBox) convertView.findViewById(R.id.checkbox);
+        final CheckBox memo_date = (CheckBox) convertView.findViewById(R.id.checkbox);
         memo_date.setChecked(item.getDone() == 1);
 
-        memo_date.setOnCheckedChangeListener(
+        Log.i("checked", item.getContent() + "-> test checked : " + (item.getDone() == 1));
+
+       /* memo_date.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        Log.i("Item : " + item.getId() + "", "changed ::: checked : " + isChecked);
                         if (isChecked) {
                             item.setDone(1);
                         } else {
@@ -62,16 +68,33 @@ public class TodoListAdapter extends ArrayAdapter<Todo> {
                         listItemDAO.modifier(item);
                         listItemDAO.close();
 
-                        Log.i(item.getId() + "", "checked : " + isChecked);
+
                     }
                 }
-        );
+        );*/
 
         TextView memo_title = (TextView) convertView.findViewById(R.id.listItem_content);
 
 
         memo_title.setText(item.getContent());
 
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (item.getDone() == 0) {
+                    item.setDone(1);
+                    memo_date.setChecked(true);
+                } else if (item.getDone() == 1){
+                    item.setDone(0);
+                    memo_date.setChecked(false);
+                }
+                ListItemDAO listItemDAO = new ListItemDAO(getContext());
+                listItemDAO.open();
+                listItemDAO.modifier(item);
+                listItemDAO.close();
+            }
+        });
 
         return convertView;
     }

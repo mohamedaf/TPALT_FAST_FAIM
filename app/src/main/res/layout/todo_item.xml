@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:checked="false"
+            android:clickable="false"
             android:paddingLeft="5dp"
             android:paddingRight="5dp" />
 
@@ -22,9 +22,9 @@
             android:id="@+id/listItem_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
             android:layout_weight="8"
-            android:gravity="left"
-            android:textColor="@color/colorPrimary"
+            android:gravity="left|center_vertical"
             android:textSize="20sp" />
     </LinearLayout>
 </LinearLayout>

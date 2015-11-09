@@ -40,10 +40,17 @@ public class ListItemDAO extends DAOBase {
     }
 
     /**
-     * @param id l'identifiant de la liste à supprimer
+     * @param id l'identifiant de l'item à supprimer
      */
-    public void supprimer(long id) {
-        mDb.delete(TABLE_NAME, KEY + " = ?", new String[]{String.valueOf(id)});
+    public int supprimer(long id) {
+        return mDb.delete(TABLE_NAME, KEY + " = ?", new String[]{String.valueOf(id)});
+    }
+
+    /**
+     * @param list l'identifiant de la liste à supprimer
+     */
+    public int deleteInList(long list) {
+        return mDb.delete(TABLE_NAME, LIST + " = ?", new String[]{String.valueOf(list)});
     }
 
     /**

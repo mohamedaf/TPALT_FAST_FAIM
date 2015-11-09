@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.todos.hkboam.todos.bdd.DatabaseHandler;
-import com.todos.hkboam.todos.bdd.modal.TodoList;
+import com.todos.hkboam.todos.bdd.modal.User;
 import com.todos.hkboam.todos.bdd.modal.UserTodoList;
 
 import java.util.ArrayList;
@@ -40,6 +40,20 @@ public class UserTodoListDAO extends DAOBase {
      */
     public void supprimer(long id) {
         mDb.delete(TABLE_NAME, KEY + " = ?", new String[]{String.valueOf(id)});
+    }
+
+    /**
+     * @param list l'identifiant de la liste à supprimer
+     */
+    public int deleteInList(long list) {
+        return mDb.delete(TABLE_NAME, LIST + " = ?", new String[]{String.valueOf(list)});
+    }
+
+    /**
+     * @param list l'identifiant de la liste à supprimer
+     */
+    public int deleteUserFromList(long user, long list) {
+        return mDb.delete(TABLE_NAME, LIST + " = ? AND " + USER + " = ?", new String[]{String.valueOf(list), String.valueOf(user)});
     }
 
     /**
@@ -84,4 +98,20 @@ public class UserTodoListDAO extends DAOBase {
         c.close();
         return res;
     }
+
+    public ArrayList<UserTodoList> getByListId(long listId) {
+        ArrayList<UserTodoList> res = new ArrayList<UserTodoList>();
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + LIST + "=?", new String[]{String.valueOf(listId)});
+        int colKey = c.getColumnIndex(KEY);
+        int colUser = c.getColumnIndex(USER);
+        int colList = c.getColumnIndex(LIST);
+        int colRights = c.getColumnIndex(RIGHTS);
+        while (c.moveToNext()) {
+            UserTodoList m = new UserTodoList(colKey, colUser, colList, colRights);
+            res.add(m);
+        }
+        c.close();
+        return res;
+    }
+    
 }

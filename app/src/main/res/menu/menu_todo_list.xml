@@ -3,12 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.todos.hkboam.todos.TodoListActivity">
     <item
-        android:id="@+id/action_add"
-        android:icon="@android:drawable/ic_menu_add"
-        android:orderInCategory="99"
-        android:title="@string/action_add"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/action_settings"
         android:icon="@android:drawable/ic_menu_manage"
         android:orderInCategory="100"

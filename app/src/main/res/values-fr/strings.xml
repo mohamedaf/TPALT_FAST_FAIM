@@ -122,4 +122,7 @@
     <string name="cannot_have_empty_todo">Un ToDo ne peut être vide !</string>
     <string name="cannot_have_empty_title">Le titre ne peut être vide !</string>
     <string name="logout">Déconnexion</string>
+
+    <string name="action_share">Partager</string>
+    <string name="action_remove">Supprimer</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.todos.hkboam.todos;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,20 +22,23 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.todos.hkboam.todos.adapter.MainAdapter;
+import com.todos.hkboam.todos.bdd.dao.ListItemDAO;
 import com.todos.hkboam.todos.bdd.dao.TodoListDAO;
 import com.todos.hkboam.todos.bdd.dao.UserTodoListDAO;
 import com.todos.hkboam.todos.bdd.modal.TodoList;
 import com.todos.hkboam.todos.bdd.modal.UserTodoList;
 import com.todos.hkboam.todos.dialog.ToDoListDialogFragment;
+import com.todos.hkboam.todos.dialog.UsersChoiceDialogFragment;
 import com.todos.hkboam.todos.persistent.CurrentUser;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, DialogInterface.OnDismissListener {
     private UserTodoListDAO userTodoListDAO = new UserTodoListDAO(this);
     private TodoListDAO todoListDAO = new TodoListDAO(this);
+    private ListItemDAO listItemDAO = new ListItemDAO(this);
 
 
     @Override
@@ -69,6 +73,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("Act", "resume");
+        init();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("Act", "pause");
+    }
+
+    @Override
+    public void onDismiss(final DialogInterface dialog) {
+        Log.i("Act", "dismiss");
         init();
     }
 
@@ -105,10 +122,12 @@ public class MainActivity extends AppCompatActivity
 
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
+
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 int cpt = listView.getCheckedItemCount();
-                String s = listView.getCheckedItemCount() + " ";
+                String s = cpt + " ";
                 if (cpt == 1) {
                     s += getResources().getString(R.string.selected_item);
                 }
@@ -128,7 +147,11 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.context_menu, menu);
+                int checkedCount = listView.getCheckedItemCount();
+                if (checkedCount == 1)
+                    inflater.inflate(R.menu.context_menu, menu);
+                else
+                    inflater.inflate(R.menu.context_menu2, menu);
                 return true;
             }
 
@@ -141,20 +164,51 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.context_share:
+                        SparseBooleanArray ch = listView.getCheckedItemPositions();
+                        todoListDAO.open();
+                        TodoList m1 = null;
+                        for (int i = 0; i < ch.size(); i++) {
+                            if (ch.valueAt(i) == true) {
+                                m1 = (TodoList) listView.getItemAtPosition(ch.keyAt(i));
+                                break;
+                            }
+                        }
+                        todoListDAO.close();
+
+                        UsersChoiceDialogFragment userChoiceDialogFragment = new UsersChoiceDialogFragment();
+                        Bundle b = new Bundle();
+                        b.putLong("listId", m1.getId());
+                        userChoiceDialogFragment.show(getFragmentManager(), "toDoListDialogFragment");
+                        return true;
                     case R.id.context_remove:
                         long[] ids = listView.getCheckedItemIds();
                         SparseBooleanArray checked = listView.getCheckedItemPositions();
+                        todoListDAO.open();
+                        listItemDAO.open();
+                        userTodoListDAO.open();
                         for (int i = 0; i < checked.size(); i++) {
                             if (checked.valueAt(i) == true) {
                                 TodoList m = (TodoList) listView.getItemAtPosition(checked.keyAt(i));
                                 Log.i("Checked : ", m.getTitle());
-                                todoListDAO.open();
-                                todoListDAO.supprimer(m.getId());
-                                todoListDAO.close();
-                                init();
+
+                                long userId = CurrentUser.getInstance().getUser().getId();
+                                long listId = m.getId();
+
+                                if (m.getAuthor() == userId) {
+                                    listItemDAO.deleteInList(listId);
+                                    userTodoListDAO.deleteInList(listId);
+                                    todoListDAO.supprimer(listId);
+                                } else {
+                                    userTodoListDAO.deleteUserFromList(userId, listId);
+                                }
+
                             }
                         }
-
+                        todoListDAO.close();
+                        listItemDAO.close();
+                        userTodoListDAO.close();
+                        init();
                         mode.finish();
                         return true;
                 }
@@ -164,7 +218,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-
+                listView.clearChoices();
             }
         });
 

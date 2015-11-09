@@ -126,4 +126,7 @@
     <string name="cannot_have_empty_todo">ToDo cannot be empty !</string>
     <string name="cannot_have_empty_title">Title cannot be empty !</string>
     <string name="logout">Logout</string>
+
+    <string name="action_share">Share</string>
+    <string name="action_remove">Remove</string>
 </resources>

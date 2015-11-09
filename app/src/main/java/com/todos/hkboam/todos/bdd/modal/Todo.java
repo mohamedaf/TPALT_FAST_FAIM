@@ -1,5 +1,7 @@
 package com.todos.hkboam.todos.bdd.modal;
 
+import android.util.Log;
+
 /**
  * Created by zomboris on 11/3/15.
  */
@@ -21,6 +23,7 @@ public class Todo {
         this.list = list;
         this.author = author;
         this.content = content;
+        this.done = 0;
     }
 
     public Todo(long modification_date, long list, long author, String content) {
@@ -28,6 +31,7 @@ public class Todo {
         this.list = list;
         this.author = author;
         this.content = content;
+        this.done = 0;
     }
 
     public Todo(long id, long modification_date, long list, long author, String content, int done) {
@@ -46,10 +50,12 @@ public class Todo {
     }
 
     public int getDone() {
+        Log.i("Item getDone : " + id, "done : " + (done == 1));
         return done;
     }
 
     public void setDone(int done) {
+        Log.i("Item setDone : " + id, "done : " + (done == 1));
         this.done = done;
     }
 
