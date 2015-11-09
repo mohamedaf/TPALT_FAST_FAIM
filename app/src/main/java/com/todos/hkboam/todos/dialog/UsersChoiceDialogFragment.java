@@ -21,21 +21,34 @@ import java.util.HashMap;
  */
 public class UsersChoiceDialogFragment extends DialogFragment {
 
+    private final static String LIST_ID_ARGUMENT = "list_id";
+
+    public static UsersChoiceDialogFragment newInstance(long listId) {
+        UsersChoiceDialogFragment f = new UsersChoiceDialogFragment();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putLong(LIST_ID_ARGUMENT, listId);
+        f.setArguments(args);
+
+        return f;
+    }
+
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final ArrayList<Integer> mSelectedItems = new ArrayList<>();  // Where we track the selected items
+        final ArrayList<Long> sharedWith = new ArrayList<>();  // Originaly selected items
+        final ArrayList<Long> toAdd = new ArrayList<>();       // New items added
+        final ArrayList<Long> toRemove = new ArrayList<>();    // items removed
 
-        final long listId = getArguments().getInt("listId");
+        final long listId = getArguments().getLong(LIST_ID_ARGUMENT);
 
-        HashMap<Integer, boolean[]> map = new HashMap<>();
         UserDAO userDAO = new UserDAO(getActivity());
         UserTodoListDAO userTodoListDAO = new UserTodoListDAO(getActivity());
-
 
         userDAO.open();
         final ArrayList<User> users = userDAO.getAllExceptCurrent();
         userDAO.close();
-
 
         userTodoListDAO.open();
         final ArrayList<UserTodoList> sharedUsers = userTodoListDAO.getByListId(listId);
@@ -53,6 +66,7 @@ public class UsersChoiceDialogFragment extends DialogFragment {
             for (UserTodoList utl : sharedUsers) {
                 if (u.getId() == utl.getUser()) {
                     checkedItems[i] = true;
+                    sharedWith.add(u.getId());
                     break;
                 }
             }
@@ -69,12 +83,19 @@ public class UsersChoiceDialogFragment extends DialogFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which,
                                                 boolean isChecked) {
-                                if (isChecked) {
-                                    // If the user checked the item, add it to the selected items
-                                    mSelectedItems.add(which);
-                                } else if (mSelectedItems.contains(which)) {
-                                    // Else, if the item is already in the array, remove it
-                                    mSelectedItems.remove(Integer.valueOf(which));
+                                long id = users.get(which).getId();
+                                if(sharedWith.contains(id)){
+                                    if(isChecked){
+                                        toRemove.remove(id);
+                                    } else {
+                                        toRemove.add(id);
+                                    }
+                                } else {
+                                    if(isChecked){
+                                        toAdd.add(id);
+                                    } else {
+                                        toAdd.remove(id);
+                                    }
                                 }
                             }
                         })
@@ -87,30 +108,13 @@ public class UsersChoiceDialogFragment extends DialogFragment {
                         UserTodoListDAO userTodoListDAO = new UserTodoListDAO(getActivity());
                         userTodoListDAO.open();
 
-
-                        for (int i = 0; i < size; i++) {
-                            User u = users.get(i);
-                            UserTodoList utl = null;
-                            long userId = u.getId();
-
-                            //On cherche si on la ToDo List a déjà été partagée avec ce user
-                            for (UserTodoList tmp : sharedUsers) {
-                                if (tmp.getUser() == userId) {
-                                    utl = tmp;
-                                    break;
-                                }
-                            }
-
-                            boolean contains = mSelectedItems.contains(i);
-
-                            //Si un user a été coché et qu'il ne l'était pas auparavant
-                            if (contains && utl == null) {
+                       for(long userId : toAdd){
                                 userTodoListDAO.ajouter(new UserTodoList(0, userId, listId, 0));
                             }
-                            //Si un user a été décoché et qu'il était coché auparavant
-                            else if (utl != null && !contains) {
-                                userTodoListDAO.deleteUserFromList(userId, listId);
-                            }
+
+                        //Si un user a été décoché et qu'il était coché auparavant
+                        for(long userId : toRemove) {
+                            userTodoListDAO.deleteUserFromList(userId, listId);
                         }
 
                         userTodoListDAO.close();

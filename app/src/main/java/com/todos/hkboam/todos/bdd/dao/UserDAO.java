@@ -109,7 +109,7 @@ public class UserDAO extends DAOBase {
     public ArrayList<User> getAllExceptCurrent() {
         ArrayList<User> res = new ArrayList<>();
 
-        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + KEY + "=?",
+        Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + KEY + "!=?",
                 new String[]{String.valueOf(CurrentUser.getInstance().getUser().getId())});
 
 
