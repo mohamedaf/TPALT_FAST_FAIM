@@ -58,13 +58,13 @@ public class MainAdapter extends ArrayAdapter<TodoList> {
 
         //Si aucun ToDo a été fait
         if (nb == 0) {
-            myImage.setImageResource(android.R.drawable.ic_delete);
-        } //Si tous les ToDo ont été faits
+            myImage.setImageResource(R.drawable.not_done);
+        } //Si tous les ToDo ont été faitss
         else if (nb == todos.size()) {
-            myImage.setImageResource(android.R.drawable.checkbox_on_background);
+            myImage.setImageResource(R.drawable.done);
         } //Sinon
         else {
-            myImage.setImageResource(android.R.drawable.ic_menu_rotate);
+            myImage.setImageResource(R.drawable.edit);
         }
 
 

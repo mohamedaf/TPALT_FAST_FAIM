@@ -183,9 +183,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.action_settings:
-                Intent i = new Intent(this, SettingsActivity.class);
-                startActivity(i);
+            case R.id.action_synchronize:
+                init();
                 return true;
         }
 
@@ -207,13 +206,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_my_lists) {
 
         } else if (id == R.id.nav_synchronize) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            init();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -255,12 +248,17 @@ public class MainActivity extends AppCompatActivity
                 newFragment.show(ft, "dialog");
                 break;
             case R.id.context_edit:
-                ToDoListDialogFragment toDoListDialogFragment = new ToDoListDialogFragment();
-                Bundle b = new Bundle();
-                b.putLong(ToDoListDialogFragment.LIST_ID, listId);
-                toDoListDialogFragment.setArguments(b);
-                toDoListDialogFragment.show(getFragmentManager(), "ToDoList dialog");
-                init();
+                if (tdl.getAuthor() == userId) {
+                    ToDoListDialogFragment toDoListDialogFragment = new ToDoListDialogFragment();
+                    Bundle b = new Bundle();
+                    b.putLong(ToDoListDialogFragment.LIST_ID, listId);
+                    toDoListDialogFragment.setArguments(b);
+                    toDoListDialogFragment.show(getFragmentManager(), "ToDoList dialog");
+                    init();
+                } else {
+                    Toast.makeText(this, R.string.no_action_edit, Toast.LENGTH_SHORT)
+                            .show();
+                }
                 break;
             case R.id.context_remove:
 

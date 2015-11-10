@@ -6,7 +6,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Paramètres</string>
-    <string name="title_activity_login">Se connecter</string>
+    <string name="title_activity_login">Todos</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -126,4 +126,6 @@
     <string name="action_share">Partager</string>
     <string name="action_remove">Supprimer</string>
     <string name="action_edit">Modifier</string>
+
+    <string name="no_action_edit">Vous n\'êtes pas l\'auteur de cette ToDoList. Vous ne pouvez pas modifier le titre</string>
 </resources>

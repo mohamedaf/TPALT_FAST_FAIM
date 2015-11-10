@@ -6,32 +6,28 @@
         <item
             android:id="@+id/nav_my_lists"
             android:icon="@android:drawable/ic_menu_edit"
-            android:title="@string/my_lists" />
+            android:title="@string/my_lists"/>
         <item
             android:id="@+id/nav_synchronize"
-            android:icon="@android:drawable/ic_menu_rotate"
-            android:title="@string/synchronize" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@android:drawable/ic_menu_manage"
-            android:title="@string/parameters" />
+            android:icon="@android:drawable/stat_notify_sync"
+            android:title="@string/synchronize"/>
         <item
             android:id="@+id/nav_login"
             android:icon="@android:drawable/ic_lock_idle_lock"
-            android:title="@string/logout" />
+            android:title="@string/logout"/>
     </group>
 
-    <item android:title="Communicate">
+    <!--<item android:title="Communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@android:drawable/ic_menu_share"
-                android:title="@string/share" />
+                android:title="@string/share"/>
             <item
                 android:id="@+id/nav_send"
                 android:icon="@android:drawable/ic_menu_send"
-                android:title="@string/send" />
+                android:title="@string/send"/>
         </menu>
-    </item>
+    </item>-->
 
 </menu>

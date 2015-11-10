@@ -47,13 +47,20 @@ public class ToDoListDialogFragment extends DialogFragment {
             todoListDAO.open();
             TodoList tdl = todoListDAO.selectionner(id);
             todoListDAO.close();
-            EditText editText = (EditText) getView().findViewById(R.id.edit);
+            EditText editText = new EditText(getActivity());
+            editText.setId(R.id.edit);
             editText.setText(tdl.getTitle());
+            builder.setView(editText);
         }
 
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                Bundle b = getArguments();
+                long aid = -1;
+                if (b != null) {
+                    aid = b.getLong(LIST_ID, -1);
+                }
                 EditText editText = (EditText) getDialog().findViewById(R.id.edit);
                 String text = editText.getText().toString();
                 Log.i("Texte entre", text);
@@ -63,14 +70,15 @@ public class ToDoListDialogFragment extends DialogFragment {
                     todoListDAO.open();
                     long time = Calendar.getInstance().getTimeInMillis();
                     long userId = CurrentUser.getInstance().getUser().getId();
-                    if (id == -1) {
+                    if (aid == -1) {
                         TodoList td = new TodoList(time,
                                 userId, text);
                         todoListDAO.ajouter(td);
                     } else {
-                        TodoList td = new TodoList(id, time,
+                        TodoList td = new TodoList(aid, time,
                                 userId, text);
                         todoListDAO.modifier(td);
+                        Log.i("modifier", "" + aid);
 
                     }
                     todoListDAO.close();
