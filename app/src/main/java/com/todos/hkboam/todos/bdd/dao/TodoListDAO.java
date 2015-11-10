@@ -70,7 +70,7 @@ public class TodoListDAO extends DAOBase {
     }
 
     public ArrayList<TodoList> toutSelectionner() {
-        ArrayList<TodoList> res = new ArrayList<TodoList>();
+        ArrayList<TodoList> res = new ArrayList<>();
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME, new String[0]);
         int colKey, colModDate, colAuthor, colTitle;
         while (c.moveToNext()) {
@@ -92,10 +92,10 @@ public class TodoListDAO extends DAOBase {
      * @param ids l'identifiant du métier à récupérer
      */
     public ArrayList<TodoList> selectionner(ArrayList<Long> ids) {
-        ArrayList<TodoList> res = new ArrayList<TodoList>(ids.size());
+        ArrayList<TodoList> res = new ArrayList<>(ids.size());
         Cursor c = null;
         for (long id : ids) {
-            c = mDb.rawQuery("select * from " + TABLE_NAME + " where id=?", new String[]{String.valueOf(id)});
+            c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + KEY + "=?", new String[]{String.valueOf(id)});
             int colKey = c.getColumnIndex(KEY);
             int colModDate = c.getColumnIndex(MODIFICATION_DATE);
             int colAuthor = c.getColumnIndex(AUTHOR);
@@ -103,12 +103,9 @@ public class TodoListDAO extends DAOBase {
             if (c.moveToNext()) {
                 TodoList m = new TodoList(c.getLong(colKey), c.getLong(colModDate), c.getLong(colAuthor), c.getString(colTitle));
                 res.add(m);
-
-
             }
         }
-        if (c != null)
-            c.close();
+        c.close();
         return res;
     }
 
@@ -124,8 +121,7 @@ public class TodoListDAO extends DAOBase {
             TodoList m = new TodoList(c.getLong(colKey), c.getLong(colModDate), c.getLong(colAuthor), c.getString(colTitle));
             res.add(m);
         }
-        if (c != null)
-            c.close();
+        c.close();
         return res;
     }
 

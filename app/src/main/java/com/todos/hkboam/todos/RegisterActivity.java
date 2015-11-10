@@ -112,6 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
                         userd.close();
                     } else {
                         userd.ajouter(u);
+                        u = userd.selectionner(u.getMail());
                         userd.close();
 
                         // debug
@@ -119,6 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.d("deb", u.getUsername());
                         Log.d("deb", u.getMail());
                         Log.d("deb", u.getPassword());
+
 
                         CurrentUser.getInstance().setUser(u);
                         // Switching to main screen

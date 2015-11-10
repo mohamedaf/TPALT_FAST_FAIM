@@ -88,10 +88,10 @@
     <string name="full_name">Nom</string>
     <string name="email">Email</string>
     <string name="password">Mot de passe</string>
-    <string name="login_button">Login</string>
-    <string name="register_button">Register New Account</string>
-    <string name="link_to_register">New to our app ? Register here</string>
-    <string name="link_to_login">Already has account! Login here</string>
+    <string name="login_button">Connexion</string>
+    <string name="register_button">Nouveau compte</string>
+    <string name="link_to_register">Nouveau ? Enregistrez vous</string>
+    <string name="link_to_login">J\'ai déjà un compte</string>
     <string name="error_invalid_email">Adresse mail invalide !</string>
     <string name="error_fullName">Le nom donné est invalide !</string>
     <string name="error_invalid_password">Le mot de passe doit contenir au moins 6 caractères !</string>

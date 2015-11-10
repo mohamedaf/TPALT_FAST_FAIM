@@ -19,8 +19,7 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:parentActivityName=".MainActivity">
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,10 +28,10 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.todos.hkboam.todos.MainActivity" />
+                android:value="com.todos.hkboam.todos.LoginActivity" />
         </activity>
         <activity
             android:name=".SettingsActivity"

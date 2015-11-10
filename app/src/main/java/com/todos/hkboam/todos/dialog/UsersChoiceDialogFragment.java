@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.todos.hkboam.todos.R;
 import com.todos.hkboam.todos.bdd.dao.UserDAO;
@@ -54,6 +55,10 @@ public class UsersChoiceDialogFragment extends DialogFragment {
         final ArrayList<UserTodoList> sharedUsers = userTodoListDAO.getByListId(listId);
         userTodoListDAO.close();
 
+        for (UserTodoList utl : sharedUsers) {
+            Log.i("user", "" + utl.getUser());
+        }
+
         final int size = users.size();
 
         CharSequence[] items = new CharSequence[size];
@@ -67,6 +72,9 @@ public class UsersChoiceDialogFragment extends DialogFragment {
                 if (u.getId() == utl.getUser()) {
                     checkedItems[i] = true;
                     sharedWith.add(u.getId());
+
+                    Log.i("Shared with", "" + u.getId() + " " + u.getUsername());
+
                     break;
                 }
             }
@@ -84,14 +92,14 @@ public class UsersChoiceDialogFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int which,
                                                 boolean isChecked) {
                                 long id = users.get(which).getId();
-                                if(sharedWith.contains(id)){
-                                    if(isChecked){
+                                if (sharedWith.contains(id)) {
+                                    if (isChecked) {
                                         toRemove.remove(id);
                                     } else {
                                         toRemove.add(id);
                                     }
                                 } else {
-                                    if(isChecked){
+                                    if (isChecked) {
                                         toAdd.add(id);
                                     } else {
                                         toAdd.remove(id);
@@ -108,13 +116,15 @@ public class UsersChoiceDialogFragment extends DialogFragment {
                         UserTodoListDAO userTodoListDAO = new UserTodoListDAO(getActivity());
                         userTodoListDAO.open();
 
-                       for(long userId : toAdd){
-                                userTodoListDAO.ajouter(new UserTodoList(0, userId, listId, 0));
-                            }
+                        for (long userId : toAdd) {
+                            userTodoListDAO.ajouter(new UserTodoList(0, userId, listId, 0));
+                            Log.i("ajouter", userId + " " + listId);
+                        }
 
                         //Si un user a été décoché et qu'il était coché auparavant
-                        for(long userId : toRemove) {
+                        for (long userId : toRemove) {
                             userTodoListDAO.deleteUserFromList(userId, listId);
+                            Log.i("Supprimer", userId + " " + listId);
                         }
 
                         userTodoListDAO.close();

@@ -95,15 +95,27 @@ public class MainActivity extends AppCompatActivity
 
     private void init() {
         long authorId = CurrentUser.getInstance().getUser().getId();
+
         userTodoListDAO.open();
         ArrayList<UserTodoList> ut_list = userTodoListDAO.getByUserId(authorId);
         userTodoListDAO.close();
         todoListDAO.open();
+        //On recupere les ToDoList partagées avec le user actuel
         final ArrayList<TodoList> todo_list = todoListDAO.selectionner(utlToListId(ut_list));
+
+        for (TodoList td : todo_list) {
+            Log.i("shared with me", td.getId() + " " + td.getTitle() + " " + td.getAuthor());
+        }
+
+        //On recupere les ToDoList du user actuel
         todo_list.addAll(todoListDAO.getByAuthorId(authorId));
         todoListDAO.close();
 
         Collections.sort(todo_list);
+
+        for (TodoList td : todo_list) {
+            Log.i("todoList", td.getId() + " " + td.getTitle() + " " + td.getAuthor());
+        }
 
         final ListView listView = (ListView) findViewById(R.id.mainListView);
 
@@ -133,108 +145,6 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
         });
-
-//        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-//        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-//
-//
-//            @Override
-//            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-//                int cpt = listView.getCheckedItemCount();
-//                String s = cpt + " ";
-//                if (cpt == 1) {
-//                    s += getResources().getString(R.string.selected_item);
-//                }
-//                if (cpt > 1) {
-//                    s += getResources().getString(R.string.selected_items);
-//                }
-//                mode.setTitle(s);
-//
-//                if (checked) {
-//                    listView.getChildAt(position).setBackgroundColor(0x6633b5e5);
-//                } else {
-//                    listView.getChildAt(position).setBackgroundColor(0x80ffffff);
-//                    listView.getChildAt(position).getBackground().setAlpha(0);
-//                }
-//            }
-//
-//            @Override
-//            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//                MenuInflater inflater = mode.getMenuInflater();
-//                int checkedCount = listView.getCheckedItemCount();
-//                if (checkedCount == 1)
-//                    inflater.inflate(R.menu.context_menu, menu);
-//                else
-//                    inflater.inflate(R.menu.context_menu2, menu);
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.context_share:
-//                        SparseBooleanArray ch = listView.getCheckedItemPositions();
-//                        todoListDAO.open();
-//                        TodoList m1 = null;
-//                        for (int i = 0; i < ch.size(); i++) {
-//                            if (ch.valueAt(i) == true) {
-//                                m1 = (TodoList) listView.getItemAtPosition(ch.keyAt(i));
-//                                break;
-//                            }
-//                        }
-//                        todoListDAO.close();
-//
-//                        UsersChoiceDialogFragment userChoiceDialogFragment = new UsersChoiceDialogFragment();
-//                        Bundle b = new Bundle();
-//                        b.putLong("listId", m1.getId());
-//                        userChoiceDialogFragment.show(getFragmentManager(), "toDoListDialogFragment");
-//                        return true;
-//                    case R.id.context_remove:
-//                        long[] ids = listView.getCheckedItemIds();
-//                        SparseBooleanArray checked = listView.getCheckedItemPositions();
-//                        todoListDAO.open();
-//                        listItemDAO.open();
-//                        userTodoListDAO.open();
-//                        for (int i = 0; i < checked.size(); i++) {
-//                            if (checked.valueAt(i) == true) {
-//                                TodoList m = (TodoList) listView.getItemAtPosition(checked.keyAt(i));
-//                                Log.i("Checked : ", m.getTitle());
-//
-//                                long userId = CurrentUser.getInstance().getUser().getId();
-//                                long listId = m.getId();
-//
-//                                if (m.getAuthor() == userId) {
-//                                    listItemDAO.deleteInList(listId);
-//                                    userTodoListDAO.deleteInList(listId);
-//                                    todoListDAO.supprimer(listId);
-//                                } else {
-//                                    userTodoListDAO.deleteUserFromList(userId, listId);
-//                                }
-//
-//                            }
-//                        }
-//                        todoListDAO.close();
-//                        listItemDAO.close();
-//                        userTodoListDAO.close();
-//                        init();
-//                        mode.finish();
-//                        return true;
-//                }
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public void onDestroyActionMode(ActionMode mode) {
-//                listView.clearChoices();
-//            }
-//        });
 
         listView.setAdapter(mA);
 

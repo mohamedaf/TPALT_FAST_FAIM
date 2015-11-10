@@ -107,11 +107,12 @@ public class UserTodoListDAO extends DAOBase {
         int colList = c.getColumnIndex(LIST);
         int colRights = c.getColumnIndex(RIGHTS);
         while (c.moveToNext()) {
-            UserTodoList m = new UserTodoList(colKey, colUser, colList, colRights);
+            UserTodoList m = new UserTodoList(c.getLong(colKey), c.getLong(colUser),
+                    c.getLong(colList), c.getInt(colRights));
             res.add(m);
         }
         c.close();
         return res;
     }
-    
+
 }
