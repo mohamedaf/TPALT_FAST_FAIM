@@ -64,7 +64,8 @@ public class TodoListDAO extends DAOBase {
             TodoList m = new TodoList(c.getLong(colKey), c.getString(colTitle));
             m.setModification_date(c.getLong(colModDate));
             m.setAuthor(c.getLong(colAuthor));
-            c.close();
+            if (c != null)
+                c.close();
             return m;
         } else return null;
     }
@@ -84,7 +85,8 @@ public class TodoListDAO extends DAOBase {
             m.setAuthor(c.getLong(colAuthor));
             res.add(m);
         }
-        c.close();
+        if (c != null)
+            c.close();
         return res;
     }
 
@@ -105,12 +107,13 @@ public class TodoListDAO extends DAOBase {
                 res.add(m);
             }
         }
-        c.close();
+        if (c != null)
+            c.close();
         return res;
     }
 
     public ArrayList<TodoList> getByAuthorId(long authorId) {
-        ArrayList<TodoList> res = new ArrayList<TodoList>();
+        ArrayList<TodoList> res = new ArrayList<>();
         Cursor c = null;
         c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + AUTHOR + "=?", new String[]{String.valueOf(authorId)});
         int colKey = c.getColumnIndex(KEY);
@@ -121,7 +124,8 @@ public class TodoListDAO extends DAOBase {
             TodoList m = new TodoList(c.getLong(colKey), c.getLong(colModDate), c.getLong(colAuthor), c.getString(colTitle));
             res.add(m);
         }
-        c.close();
+        if (c != null)
+            c.close();
         return res;
     }
 

@@ -85,14 +85,15 @@ public class UserTodoListDAO extends DAOBase {
     }
 
     public ArrayList<UserTodoList> getByUserId(long userId) {
-        ArrayList<UserTodoList> res = new ArrayList<UserTodoList>();
+        ArrayList<UserTodoList> res = new ArrayList<>();
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + USER + "=?", new String[]{String.valueOf(userId)});
         int colKey = c.getColumnIndex(KEY);
         int colUser = c.getColumnIndex(USER);
         int colList = c.getColumnIndex(LIST);
         int colRights = c.getColumnIndex(RIGHTS);
         while (c.moveToNext()) {
-            UserTodoList m = new UserTodoList(colKey, colUser, colList, colRights);
+            UserTodoList m = new UserTodoList(c.getLong(colKey), c.getLong(colUser),
+                    c.getLong(colList), c.getInt(colRights));
             res.add(m);
         }
         c.close();
@@ -100,7 +101,7 @@ public class UserTodoListDAO extends DAOBase {
     }
 
     public ArrayList<UserTodoList> getByListId(long listId) {
-        ArrayList<UserTodoList> res = new ArrayList<UserTodoList>();
+        ArrayList<UserTodoList> res = new ArrayList<>();
         Cursor c = mDb.rawQuery("select * from " + TABLE_NAME + " where " + LIST + "=?", new String[]{String.valueOf(listId)});
         int colKey = c.getColumnIndex(KEY);
         int colUser = c.getColumnIndex(USER);

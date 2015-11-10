@@ -24,16 +24,33 @@ import java.util.Calendar;
  * Created by HK-Lab on 04/11/2015.
  */
 public class ToDoListDialogFragment extends DialogFragment {
+    public final static String LIST_ID = "list_id";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final TodoListDAO todoListDAO = new TodoListDAO(getActivity());
         // Use the Builder class for convenient dialog construction
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.dialog_edit, null));
+        long id = -1;
+        Bundle b = getArguments();
+        if (b != null)
+            id = getArguments().getLong(LIST_ID, -1);
 
-        builder.setTitle(R.string.new_todo_list);
+
+        if (id == -1) {
+            builder.setTitle(R.string.new_todo_list);
+        } else {
+            builder.setTitle(R.string.action_edit);
+            todoListDAO.open();
+            TodoList tdl = todoListDAO.selectionner(id);
+            todoListDAO.close();
+            EditText editText = (EditText) getView().findViewById(R.id.edit);
+            editText.setText(tdl.getTitle());
+        }
+
 
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -42,12 +59,20 @@ public class ToDoListDialogFragment extends DialogFragment {
                 Log.i("Texte entre", text);
                 if (text.length() > 0) {
 
-                    TodoList td = new TodoList(Calendar.getInstance().getTimeInMillis(),
-                            CurrentUser.getInstance().getUser().getId(), text);
 
-                    TodoListDAO todoListDAO = new TodoListDAO(getActivity());
                     todoListDAO.open();
-                    todoListDAO.ajouter(td);
+                    long time = Calendar.getInstance().getTimeInMillis();
+                    long userId = CurrentUser.getInstance().getUser().getId();
+                    if (id == -1) {
+                        TodoList td = new TodoList(time,
+                                userId, text);
+                        todoListDAO.ajouter(td);
+                    } else {
+                        TodoList td = new TodoList(id, time,
+                                userId, text);
+                        todoListDAO.modifier(td);
+
+                    }
                     todoListDAO.close();
                 } else {
                     Toast.makeText(getActivity(), R.string.cannot_have_empty_title, Toast.LENGTH_SHORT).show();

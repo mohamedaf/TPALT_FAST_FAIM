@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.todos.hkboam.todos.adapter.MainAdapter;
 import com.todos.hkboam.todos.bdd.dao.ListItemDAO;
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     private UserTodoListDAO userTodoListDAO = new UserTodoListDAO(this);
     private TodoListDAO todoListDAO = new TodoListDAO(this);
     private ListItemDAO listItemDAO = new ListItemDAO(this);
+    private final ArrayList<TodoList> todo_list = new ArrayList<>();
 
 
     @Override
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     @Override
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void init() {
+        todo_list.clear();
         long authorId = CurrentUser.getInstance().getUser().getId();
 
         userTodoListDAO.open();
@@ -101,7 +107,7 @@ public class MainActivity extends AppCompatActivity
         userTodoListDAO.close();
         todoListDAO.open();
         //On recupere les ToDoList partagées avec le user actuel
-        final ArrayList<TodoList> todo_list = todoListDAO.selectionner(utlToListId(ut_list));
+        todo_list.addAll(todoListDAO.selectionner(utlToListId(ut_list)));
 
         for (TodoList td : todo_list) {
             Log.i("shared with me", td.getId() + " " + td.getTitle() + " " + td.getAuthor());
@@ -129,7 +135,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        /*listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -139,15 +145,15 @@ public class MainActivity extends AppCompatActivity
                 }
                 ft.addToBackStack(null);
 
-                // Create and show the dialog.
+
                 DialogFragment newFragment = UsersChoiceDialogFragment.newInstance(todo_list.get(position).getId());
                 newFragment.show(ft, "dialog");
                 return true;
             }
-        });
+        });*/
 
         listView.setAdapter(mA);
-
+        registerForContextMenu(listView);
     }
 
 
@@ -215,8 +221,73 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * This will be invoked when an item in the listview is long pressed
+     */
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.context_menu, menu);
+    }
+
+    /**
+     * This will be invoked when a menu item is selected
+     */
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        TodoList tdl = todo_list.get(info.position);
+        long userId = CurrentUser.getInstance().getUser().getId();
+        long listId = tdl.getId();
+
+        switch (item.getItemId()) {
+            case R.id.context_share:
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                DialogFragment newFragment = UsersChoiceDialogFragment.newInstance(
+                        todo_list.get(info.position).getId());
+                newFragment.show(ft, "dialog");
+                break;
+            case R.id.context_edit:
+                ToDoListDialogFragment toDoListDialogFragment = new ToDoListDialogFragment();
+                Bundle b = new Bundle();
+                b.putLong(ToDoListDialogFragment.LIST_ID, listId);
+                toDoListDialogFragment.setArguments(b);
+                toDoListDialogFragment.show(getFragmentManager(), "ToDoList dialog");
+                init();
+                break;
+            case R.id.context_remove:
+
+                todoListDAO.open();
+                listItemDAO.open();
+                userTodoListDAO.open();
+
+                if (tdl.getAuthor() == userId) {
+                    listItemDAO.deleteInList(listId);
+                    userTodoListDAO.deleteInList(listId);
+                    todoListDAO.supprimer(listId);
+                } else {
+                    userTodoListDAO.deleteUserFromList(userId, listId);
+                }
+
+                todoListDAO.close();
+                listItemDAO.close();
+                userTodoListDAO.close();
+                init();
+                break;
+
+        }
+        return true;
+    }
+
     private ArrayList<Long> utlToListId(ArrayList<UserTodoList> utl) {
-        ArrayList<Long> res = new ArrayList<Long>(utl.size());
+        ArrayList<Long> res = new ArrayList<>(utl.size());
         for (UserTodoList u : utl) {
             res.add(u.getList());
         }
